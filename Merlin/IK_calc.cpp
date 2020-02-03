@@ -1,3 +1,11 @@
+//Creation Date: February 2nd, 2020
+//Original Author: Erik Lewis
+//Description: This code will  perform the inverse kinematics calculations
+//              necessary to convert the 3 dimensional
+//              coordinates received from the CMController 
+//              into steps for the motors such that the arm's
+//              end effector will reach the desired end point.
+
 //IK reference material http://www.ryanjuckett.com/programming/analytic-two-bone-ik-in-2d/
 
 #include <math.h>
@@ -18,8 +26,6 @@ void calculate_steps (long* coords, int* steps){
     long negative_shoulder_theta1;
     long *pargs;
 
-    steps[3] = tan(x/y)/STEP_ANGLE; //base rotation steps
-
     dist_to_target = (x^2 + y^2)^(0.5);
     height = z+WRIST_LEN;
 
@@ -34,10 +40,13 @@ void calculate_steps (long* coords, int* steps){
 
     steps[0] = (int) (shoulder_theta/STEP_ANGLE);
     steps[1] = (int) (elbow_theta/STEP_ANGLE);
-    steps[2] = (int) (wrist_theta/STEP_ANGLE); 
+    steps[2] = (int) (wrist_theta/STEP_ANGLE);
+    steps[3] = (int) (tan(x/y)/STEP_ANGLE); //base rotation steps
 }
 
 void calc_wrist_theta(long* pargs){
     //Caculate the angle the wrist needs to move relative
     // to elbow joint such that it is parallel to y-axis
+    //This calculation is slightly complex and is still being
+    // optimized.
 }

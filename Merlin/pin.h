@@ -1,3 +1,6 @@
+//Pin assigment file
+//Exact Arduino pin assigment ia still outstanding
+
 #define stepPin_shoulder
 #define dirPin_shoulder
 #define enPin_shoulder

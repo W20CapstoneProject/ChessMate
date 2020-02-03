@@ -1,4 +1,12 @@
-
+//Creation Date: February 2nd, 2020
+//Original Author: Erik Lewis
+//Description: This code will set up the Arduino Mega so that
+//              it can communicate with the stepper motor driver
+//              array that drives the stepper motors of the Moveo
+//              robot arm. It additionaly will convert the 3 dimensional
+//              coordinates received from the CMController 
+//              into steps for the motors such that the arm's
+//              end effector will reach the desired end point.
 
 //define pins
 #include <pin.h>
@@ -20,10 +28,10 @@ long* previous_move[4];
 
 void setup(){
     //Setup all the pins for the stepper drivers
-    pinMode(stepPin_shoulder, OUTPUT);
-    pinMode(dirPin_shoulder, OUTPUT);
-    pinMode(enPin_shoulder, OUTPUT);
-    digitalWrite(enPin_shoulder, LOW);
+    pinMode(stepPin_shoulder, OUTPUT); //step pulse pin
+    pinMode(dirPin_shoulder, OUTPUT);  //rotional direction control pin
+    pinMode(enPin_shoulder, OUTPUT);   //enable/disable pin
+    digitalWrite(enPin_shoulder, LOW); //initially disable the motors
 
     pinMode(stepPin_elbow, OUTPUT);
     pinMode(dirPin_elbow, OUTPUT);
@@ -45,7 +53,7 @@ void setup(){
     pinMode(enPin_roll, OUTPUT);
     digitalWrite(enPin_, LOW);
 
-    //Configure stepper parameters and add them all to the MultiStepper
+    //Configure stepper base parameters and add them all to the MultiStepper
     // controller
     for (int i = 0; i <= NUM_STEPPERS; i++)
     {
@@ -57,6 +65,7 @@ void setup(){
 
 //Main motor control loop
 void loop() {
+
     poll_for_new_coords(new_move);
     if (new_move != previous_move){
         //VARIABLE MANAGEMENT*******************************
@@ -64,6 +73,7 @@ void loop() {
         int joint_steps[NUM_STEPPERS];  //Array to hold the steps for the stepper motors
         long coords[3];                 //3D coordinates of end point
         int gripper_instruction;        //open or close gripper
+        
         //get new move data
         gripper_instruction = (int) new_move[4];
         for (int i = 0; i <= 3; i++)
@@ -90,5 +100,6 @@ void loop() {
 }
 
 void poll_for_new_coords(long* move){
-    //Poll serial connection for a new command from the CM system
+    //Poll serial connection for a new command from the CMController
+    //This process has not been fully designed yet.
 }
