@@ -42,8 +42,10 @@ void calculate_steps (long* coords, int* steps){
     steps[1] = (int) (elbow_theta/STEP_ANGLE);
     steps[2] = (int) (wrist_theta/STEP_ANGLE);
     steps[3] = (int) (tan(x/y)/STEP_ANGLE); //base rotation steps
+    steps[4] = 0;  //wrist joint roll rotation steps. For now this motor is not being used, it will be for controling piece orientation later
 }
 
+//Helper function
 void calc_wrist_theta(long* pargs){
     //Caculate the angle the wrist needs to move relative
     // to elbow joint such that it is parallel to y-axis
