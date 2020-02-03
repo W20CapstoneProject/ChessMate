@@ -1,3 +1,5 @@
+
+
 //define pins
 #include <pin.h>
 #include <stepper_config.h>
@@ -53,39 +55,40 @@ void setup(){
     }
 }
 
+//Main motor control loop
 void loop() {
     poll_for_new_coords(new_move);
     if (new_move != previous_move){
+        //VARIABLE MANAGEMENT*******************************
         //variable declerations
-        int joint_steps[NUM_STEPPERS];
-        long coords[3];
-        int gripper_instruction;
+        int joint_steps[NUM_STEPPERS];  //Array to hold the steps for the stepper motors
+        long coords[3];                 //3D coordinates of end point
+        int gripper_instruction;        //open or close gripper
         //get new move data
         gripper_instruction = (int) new_move[4];
         for (int i = 0; i <= 3; i++)
         {
             coords[i] = new_move[i];
         }
+        //VARIABLE MANAGEMENT*******************************
 
         calculate_steps(coords, joint_steps);
         
-        //
+        //execute the requested move
         arm_steppers.moveTo(joint_steps);
         arm_steppers.run();
-        actuate_gripper(gripper_instruction);
+        delay(500);
+        actuate_gripper(gripper_instruction); //open or close the gripper as per
 
+        delay(500);
+
+        //Move arm back to origin so it can execute it's next move
         arm_steppers.moveTo([0, 0, 0, 0, 0]);
         arm_steppers.run();
-        previous_move = new_move; //
+        previous_move = new_move;
     }
 }
 
-// void control_steppers(int* joint_steps) {
-
-    
-//     // for (int i = 0; i <= NUM_STEPPERS; i++)
-//     // {
-//     //     //Eventually this should be threaded per stepper
-//     //     steppers[i].moveTo(joint_steps[i])
-//     // }
-// }
+void poll_for_new_coords(long* move){
+    //Poll serial connection for a new command from the CM system
+}
