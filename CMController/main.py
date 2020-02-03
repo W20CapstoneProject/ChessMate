@@ -6,7 +6,6 @@ Used to interpret ChessMate FEN based commands into coordinate commands for the 
 '''
 
 
-
 '''
 getMove()
 

@@ -1,9 +1,21 @@
 Index for ChessMate
-
+''''''''''''''''''''''''''''''''''''''''''
 [N]ot compiled successfully
 [C]ompiled without errors
 [E]xecuted or otherwise demonstrated
 [T]ested and passed
+''''''''''''''''''''''''''''''''''''''''''
 
-main.py []
-test.py []
+/
+main.py [C]
+test.py [C]
+
+
+/CMController
+main.py [C]
+
+/Merlin
+IK_calc.cpp [C]
+Merlin_main.cpp [C]
+pin.h [C]
+stepper_config.h [C]
