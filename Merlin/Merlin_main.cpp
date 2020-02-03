@@ -7,10 +7,15 @@
 //              coordinates received from the CMController 
 //              into steps for the motors such that the arm's
 //              end effector will reach the desired end point.
+//**A NOTE ON MEMORY MANAGEMENT: I am avoiding dynamic memory allocation
+//                               for the Arduino specifically, as some personal
+//                               research has suggested it would cause heap fragmentation.
+//                               More personal research is needed to clarify this
+//                               so for now we are going with the prevailing public opinion.
 
 //define pins
-#include <pin.h>
-#include <stepper_config.h>
+#include "pin.h"
+#include "stepper_config.h"
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 
