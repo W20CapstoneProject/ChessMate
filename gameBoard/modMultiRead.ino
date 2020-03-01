@@ -2,7 +2,10 @@
 
 // may need stuff from: adafruit/Adafruit-MCP23017-Arduino-Library
 
-// Source: https://github.com/Annaane/MultiRfid/blob/master/FourRFID.ino
+// Sources: https://github.com/Annaane/MultiRfid/blob/master/FourRFID.ino
+// https://www.youtube.com/watch?v=hxQYIwdZRng
+// https://lastminuteengineers.com/how-rfid-works-rc522-arduino-tutorial/
+//https://github.com/miguelbalboa/rfid/tree/master/examples/ReadUidMultiReader
 
 /**
    --------------------------------------------------------------------------------------------------------------------
