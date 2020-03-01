@@ -1,3 +1,9 @@
+'''
+Test
+
+Unit test suite for CMController actions.
+'''
+
 import unittest
 from cm import CMController
 from board import GameBoard
@@ -10,7 +16,6 @@ class TestCMController(unittest.TestCase):
         self.cm = CMController()
 
     def test_get_coordinate(self):
-        #index = 1
         for index in range(1,65):
             x = self.cm.get_coordinate_x(index)
             y = self.cm.get_coordinate_y(index)

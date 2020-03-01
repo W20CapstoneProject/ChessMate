@@ -11,6 +11,9 @@ class CMController:
     CMController
 
     Used to interpret ChessMate based commands into coordinate commands for the Moveo Arm.
+
+    Example command:
+    cmd = [3.0, 48.0, 0, 'K']
     '''
 
     def __init__(self):
@@ -65,16 +68,13 @@ class CMController:
         '''
         Call to calculate the x coordinate of the chess board square.
         '''
-
         column = index % 8
         if column == 0:
             column=8
 
         if (column % 2) == 0:
-            # Even
             x = int(self.board.SQUARE_WIDTH)/2 + (column - 5) * (int(self.board.SQUARE_WIDTH))
         else:
-            #Odd
             x = - int(self.board.SQUARE_WIDTH)/2 - (4 - column) * (int(self.board.SQUARE_WIDTH))
 
         return x
@@ -88,6 +88,12 @@ class CMController:
         y = (int(self.board.BASE_LENGTH)) + (int(self.board.BORDER_WIDTH)) + int(self.board.SQUARE_LENGTH)/2 + row * (int(self.board.SQUARE_LENGTH))
         return y
 
+    def get_coordinate_Z(self):
+        '''
+        Call to calculate the z coordinate of the chess board square.
+        '''
+        return 0
+
 
     def get_coordinate_command(self, square_number, action):
         '''
@@ -95,15 +101,16 @@ class CMController:
         '''
         x = self.get_coordinate_x(square_number)
         y = self.get_coordinate_y(square_number)
-        z = 0
+        z = self.get_coordinate_z()
         return [x, y, z, action]
 
-    def create_commands(self, starting, ending, action):
+
+    def create_commands(self, action):
         '''
         Create the command sequence for the Merlin software.
+
+        The each action will have a starting and ending points
         '''
-
-
 
 
 
