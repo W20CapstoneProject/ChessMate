@@ -1,24 +1,22 @@
-'''
-CMController
+import cm
+import re
+import subprocess
 
-Used to interpret ChessMate FEN based commands into coordinate commands for the Moveo Arm.
+device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
+df = subprocess.check_output("lsusb")
+devices = []
+for i in df.split('\n'):
+    if i:
+        info = device_re.match(i)
+        if info:
+            dinfo = info.groupdict()
+            dinfo['device'] = '/dev/bus/usb/%s/%s' % (dinfo.pop('bus'), dinfo.pop('device'))
+            devices.append(dinfo)
+print(devices)
 
-'''
+#ser = cm.connect()
+#print(ser.name)
 
 
-'''
-getMove()
-
-Call to receive a coordinate command from the given FEN string indicating the desired chess move.
-'''
-def getCoordinateCommand(FEN):
-    return 0
-
-
-'''
-calculateDistance()
-
-Call to calculate the distance from the Moveo zero position to the chess square.
-'''
-def calculateDistance():
+def run():
     return 0
