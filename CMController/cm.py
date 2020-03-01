@@ -63,14 +63,7 @@ class CMController:
 
     def get_coordinate_x(self, index):
         '''
-        Call to calculate the distance from the Moveo zero position to the chess square.
-
-        Algorithm:
-        index = (Square Number) mod 8
-        if index is less than 5:
-            x = - (5 - index) * (Square Width / 2)
-        else:
-            x = (index - 4) * (Square Width / 2)
+        Call to calculate the x coordinate of the chess board square.
         '''
 
         column = index % 8
@@ -89,25 +82,28 @@ class CMController:
 
     def get_coordinate_y(self, index):
         '''
-        Call to calculate the distance from the Moveo zero position to the chess square.
-
-        Algorithm:
-        row = floor(index/8)
-        y ~ (Base Length) + (Boarder Width) + (Square Length) + row * (Square Length / 2)
+        Call to calculate the y coordinate of the chess board square.
         '''
         row = math.floor((index-1)/8)
         y = (int(self.board.BASE_LENGTH)) + (int(self.board.BORDER_WIDTH)) + int(self.board.SQUARE_LENGTH)/2 + row * (int(self.board.SQUARE_LENGTH))
         return y
 
 
-    def get_coordinate_command(self, square_number):
+    def get_coordinate_command(self, square_number, action):
         '''
-        Call to receive a coordinate command from the given FEN string indicating the desired chess move.
+        Call to receive a coordinate command from the square number.
         '''
         x = self.get_coordinate_x(square_number)
         y = self.get_coordinate_y(square_number)
         z = 0
-        return [x, y, z]
+        return [x, y, z, action]
+
+    def create_commands(self, starting, ending, action):
+        '''
+        Create the command sequence for the Merlin software.
+        '''
+
+
 
 
 
