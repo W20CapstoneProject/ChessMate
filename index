@@ -13,6 +13,9 @@ test.py [C]
 
 /CMController
 main.py [C]
+cm.py []
+demo.py []
+main.py []
 
 /Merlin
 IK_calc.cpp [C]

@@ -1,4 +1,6 @@
 '''
+Demo
+
 Use to send instructions to the Merlin via serial connection.
 '''
 
