@@ -6,7 +6,8 @@
 //              into steps for the motors such that the arm's
 //              end effector will reach the desired end point.
 
-//IK reference material http://www.ryanjuckett.com/programming/analytic-two-bone-ik-in-2d/
+//IK reference material: http://www.ryanjuckett.com/programming/analytic-two-bone-ik-in-2d/
+//                      http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.65.5698&rep=rep1&type=pdf
 //FORWARD KINEMATICS EQUATIONS
 //These are what was use to derive the IK equations use here.
 // NOTE: <x, y, gamma> = the end effector coordinates.
