@@ -5,9 +5,9 @@
 #define dirPin_shoulder 24
 #define enPin_shoulder 26
 
-#define stepPin_elbow 23
-#define dirPin_elbow 25
-#define enPin_elbow 27
+#define stepPin_elbow 41
+#define dirPin_elbow 43
+#define enPin_elbow 45
 
 #define stepPin_wrist 32
 #define dirPin_wrist 34
@@ -20,3 +20,6 @@
 #define stepPin_roll 40
 #define dirPin_roll 42
 #define enPin_roll 44
+
+#define gripperPin 46
+#define gripperPulse 1500

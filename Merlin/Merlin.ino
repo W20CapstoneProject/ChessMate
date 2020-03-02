@@ -24,6 +24,7 @@
 int stepPins[NUM_STEPPERS] = {stepPin_shoulder, stepPin_elbow, stepPin_wrist, stepPin_base, stepPin_roll};
 int dirPins[NUM_STEPPERS] = {dirPin_shoulder, dirPin_elbow, dirPin_wrist, dirPin_base, dirPin_roll};
  
+//Unfortunately there is no way to initlize these as an array. It must be individual objects.
 AccelStepper stepper_shoulder(AccelStepper::DRIVER, stepPins[0], dirPins[0]);
 AccelStepper stepper_elbow(AccelStepper::DRIVER, stepPins[1], dirPins[1]);
 AccelStepper stepper_wrist(AccelStepper::DRIVER, stepPins[2], dirPins[2]);
@@ -62,9 +63,10 @@ void setup(){
     pinMode(enPin_roll, OUTPUT);
     digitalWrite(enPin_roll, LOW);
 
+    pinMode(gripperPin, OUTPUT);
+
     //Configure stepper base parameters and add them all to the MultiStepper
-    // controller
-        
+    // controller    
     stepper_shoulder.setMaxSpeed(MAX_SPEED);
     stepper_shoulder.setAcceleration(ACCELERATION);
     arm_steppers.addStepper(stepper_shoulder);
@@ -86,6 +88,30 @@ void setup(){
     arm_steppers.addStepper(stepper_roll);
 }
 
+void poll_for_new_coords(double* move){
+    //Poll serial connection for a new command from the CMController
+    //This process has not been fully designed yet.
+    move[0] = 10;
+    move[1] = 20;
+    move[2] = 30;
+    move[3] = 1;
+}
+
+void actuate_gripper (int decision) {
+    //Send signal to servo to make one full rotation
+    //It only moves clockwise for now. Anticlockwise rotation is trivial but hasn't been implemented.
+
+    bool clockwise;
+
+    if (decision){
+        clockwise = true;
+    } else{clockwise = false;}
+
+    digitalWrite(gripperPin, HIGH);
+    delayMicroseconds(gripperPulse);
+    digitalWrite(gripperPin, LOW);
+}
+
 //Main motor control loop
 void loop() {
 
@@ -99,7 +125,7 @@ void loop() {
         int gripper_instruction;        //open or close gripper
         
         //get new move data
-        gripper_instruction = (int) new_move[4];
+        gripper_instruction = (int) new_move[3];
         for (int i = 0; i <= 3; i++)
         {
             coords[i] = new_move[i];
@@ -109,22 +135,17 @@ void loop() {
         
         //execute the requested move
         arm_steppers.moveTo(joint_steps);
-        arm_steppers.run();
-        delay(500);
-        //actuate_gripper(gripper_instruction); //open or close the gripper as per
+        arm_steppers.runSpeedToPosition();
 
+        delay(500);
+        actuate_gripper(gripper_instruction); //open or close the gripper as per
         delay(500);
 
         //Move arm back to origin so it can execute it's next move
         arm_steppers.moveTo(origin);
-        arm_steppers.run();
-        for(int i=0; i<10; ++i){
+        arm_steppers.runSpeedToPosition();
+        for(int i=0; i <= 3; ++i){
           previous_move[i] = new_move[i];
         }
     }
-}
-
-void poll_for_new_coords(double* move){
-    //Poll serial connection for a new command from the CMController
-    //This process has not been fully designed yet.
 }
