@@ -6,6 +6,9 @@ Index for ChessMate
 [T]ested and passed
 ''''''''''''''''''''''''''''''''''''''''''
 
+ChessMa†e.py [N] (Runs but with an error associated with comm. that has not yet been integrated) 
+modMultiRead [C]  
+
 /
 main.py [C]
 test.py [C]
