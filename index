@@ -6,16 +6,21 @@ Index for ChessMate
 [T]ested and passed
 ''''''''''''''''''''''''''''''''''''''''''
 
-/
-main.py [C]
-test.py [C]
+/ChessMate/CMController
+ChessMate.py []
+communication.py []
+MasterArduino.py []
 
 
-/CMController
+/ChessMate/CMController
 main.py [C]
 cm.py []
 demo.py []
 main.py []
+
+/gameBoard
+main.ino []
+modMultiRead.ino []
 
 /Merlin
 IK_calc.cpp [C]
