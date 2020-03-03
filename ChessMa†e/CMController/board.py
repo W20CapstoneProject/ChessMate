@@ -3,8 +3,9 @@ import configparser
 class GameBoard:
     '''
     GameBoard
+    Physical board parameters used to map square number index to coordinates.
 
-    GameBoard parameters used to map index to coordinates.
+    March 2, 2020: Currently working.
     '''
 
     def __init__(self):
