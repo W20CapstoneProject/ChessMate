@@ -7,19 +7,18 @@ Index for ChessMate
 ''''''''''''''''''''''''''''''''''''''''''
 
 /ChessMate
-ChessMa†e.py [N] (Runs but with an error associated with comm. that has not yet been integrated) 
-modMultiRead [C]  
+ChessMa†e.py [N] (Runs but with an error associated with comm. that has not yet been integrated)
+modMultiRead [C]
 
 
 /ChessMate/CMController
 main.py [C]
-cm.py []
-demo.py []
-main.py []
+cm.py [C]
+demo.py [C]
 
 /gameBoard
-main.ino []
-modMultiRead.ino []
+main.ino [C]
+modMultiRead.ino [C]
 
 /Merlin
 IK_calc.cpp [C]
