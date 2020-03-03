@@ -1,15 +1,15 @@
 # ChessMate
 
-##ChessMate
+## ChessMate
 The main program for use with the BCN Moveo and our ChessMate game board.
 
-##Merlin
+## Merlin
 Custom robotic control program.
 
-##CMController
+## CMController
 Connector for ChessMate and Merlin.
 
-##gameBoard
+## gameBoard
 Arduino code for running the RFID chess board.
 
 
