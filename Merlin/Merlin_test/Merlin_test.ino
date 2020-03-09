@@ -1,22 +1,22 @@
-#define stepPin0 33
-#define dirPin0 35
-#define enPin0 37
+#define stepPin1 22
+#define dirPin1 24
+#define enPin1 26
 
-#define stepPin1 40
-#define dirPin1 42
-#define enPin1 44
+#define stepPin0 41
+#define dirPin0 43
+#define enPin0 45
 
 #define stepPin2 32
 #define dirPin2 34
 #define enPin2 36
 
-#define stepPin3 41 
-#define dirPin3 43
-#define enPin3 45
+#define stepPin3 33 
+#define dirPin3 35
+#define enPin3 37
 
-#define stepPin4 22
-#define dirPin4 24
-#define enPin4 26
+#define stepPin4 40
+#define dirPin4 42
+#define enPin4 44
 
 #define gripperPin 46
 #define gripperPulse 1500
@@ -88,7 +88,9 @@ void setup()
 
     arm_steppers.addStepper(stepper0);
     arm_steppers.addStepper(stepper1);
-    arm_steppers.addStepper(stepper2);    
+    arm_steppers.addStepper(stepper2);
+    arm_steppers.addStepper(stepper3);
+    arm_steppers.addStepper(stepper4);  
 }
 
 void actuate_gripper (int decision) {
@@ -113,32 +115,32 @@ void actuate_gripper (int decision) {
 
 
 void loop(){
-//  if (stepper0.distanceToGo() == 0)
-//  {
-//    delay(500);
-//    pos = -pos;
-//    if (abs(pos) < 10){
-//      pos = -(pos + 8000);
-//      //digitalWrite(enPin, HIGH);
-//      delay(1000);
-//      //digitalWrite(enPin, LOW);
-//      }
-//    stepper0.moveTo(pos);
-//    stepper1.moveTo(pos);
-//    stepper2.moveTo(pos); 
-//    stepper3.moveTo(pos+500000);
-//    stepper4.moveTo(pos+5000); 
-//  }
-//
-//  stepper0.run();
-//  stepper1.run();
-//  stepper2.run();
-//  stepper3.run();
-//  stepper4.run();
+  if (stepper0.distanceToGo() == 0)
+  {
+    delay(500);
+    pos = -pos;
+    if (abs(pos) < 10){
+      pos = -(pos + 8000);
+      //digitalWrite(enPin, HIGH);
+      delay(1000);
+      //digitalWrite(enPin, LOW);
+      }
+    stepper0.moveTo(pos);
+    stepper1.moveTo(pos);
+    stepper2.moveTo(pos);
+    stepper3.moveTo(pos);
+    stepper4.moveTo(pos);
+  }
+
+  stepper0.run();
+  stepper1.run();
+  stepper2.run();
+  stepper3.run();
+  stepper4.run();
   
-  actuate_gripper(true);
-  delay(500);
-  actuate_gripper(false);
+//  actuate_gripper(true);
+//  delay(500);
+//  actuate_gripper(false);
 
 //  if(cw == 1){
 //    cw = -1;

@@ -37,8 +37,8 @@ MultiStepper arm_steppers;
 
 Servo gripper;
 
-double new_move[4];
-double previous_move[4];
+double new_move[5];
+double previous_move[5];
 
 void setup(){
     Serial.begin(9600);
@@ -106,10 +106,11 @@ void setup(){
 void poll_for_new_coords(double (&move)[4]){
     //Poll serial connection for a new command from the CMController
     //This process has not been fully designed yet.
-    move[0] = 480;
-    move[1] = 480;
-    move[2] = 70;
-    move[3] = 1;
+    move[0] = 25;
+    move[1] = 10;
+    move[2] = 7;
+    move[3] = 180;
+    move[4] = 1;
 }
 
 void actuate_gripper (int decision) {
@@ -145,14 +146,14 @@ void loop() {
         //VARIABLE MANAGEMENT*******************************
         //variable declerations
         long joint_steps[NUM_STEPPERS] = {0, 0, 0, 0, 0};  //Array to hold the steps for the stepper motors
-        double coords[3];                 //3D coordinates of end point
+        double coords[4];                 //3D coordinates of end point
         long origin[NUM_STEPPERS] = {0, 0, 0, 0, 0};
         int gripper_instruction;        //open or close gripper
         
         //get new move data
         Serial.print("\nPRE-CALC coords ********************\n");
-        gripper_instruction = (int) new_move[3];
-        for (int i = 0; i <= 3; i++)
+        gripper_instruction = (int) new_move[4];
+        for (int i = 0; i <= 4; i++)
         {
             coords[i] = new_move[i];
           if(debug){
