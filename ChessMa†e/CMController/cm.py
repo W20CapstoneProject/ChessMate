@@ -15,7 +15,10 @@ class CMController:
     Used to interpret ChessMate based commands into coordinate commands for the Moveo Arm.
 
     Example command:
-    cmd = [3.0, 48.0, 0, 'K']
+    123 637 812 382 732
+
+    Commands are 3 digit step commands for the following sequence of motors
+    base shoulder elbow wrist grip
 
     March 2, 2020: The main move execution command still needs to be completed. Also requires better unit testing to ensure the correct coordinate mapping and move consumption. Will be updating this code for the IO demonstration to work with the Merlin control program.
     '''
@@ -71,7 +74,7 @@ class CMController:
         return complete
 
 
-    def get_coordinate_command(self, square_number, action):
+    def get_coordinates(self, square_number):
         '''
         Call to receive a coordinate command from the square number.
         March 2, 2020: Will work once the sub routines are verified. Also might need to change call pattern.
@@ -79,7 +82,7 @@ class CMController:
         x = self.board.get_coordinate_x(square_number)
         y = self.board.get_coordinate_y(square_number)
         z = self.board.get_coordinate_z()
-        return [x, y, z, action]
+        return [x, y, z]
 
 
     def create_commands(self, moves):

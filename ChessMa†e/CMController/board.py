@@ -1,4 +1,5 @@
 import configparser
+import math
 
 class GameBoard:
     '''
@@ -59,16 +60,15 @@ class GameBoard:
         return z + self.Z_BIAS
 
 
-class Mapping:
+class BoardMapping:
     '''
-    Mapping
+    BoardMapping
 
-    Maps out the game board.
+    Maps out the coordinates of the game board.
 
     '''
     def __init__(self):
         self.board = GameBoard()
-
 
 
     def plot_board(self):
