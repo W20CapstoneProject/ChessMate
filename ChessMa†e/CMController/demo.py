@@ -15,7 +15,6 @@ import fileinput
 print("\n*** Welcome to CMController Demo Mode! ***")
 cm_controller = cm.CMController()
 cm_controller.connect()
-cm_controller.plot_board()
 
 if (cm_controller.is_connected() == False):
     devices = cm.list_serial_devices()
@@ -37,5 +36,4 @@ while True:
         cm_controller.device.close()
         sys.exit(0)
 
-    print("Sending command...")
     cm_controller.send_command(command)

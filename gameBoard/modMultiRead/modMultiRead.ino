@@ -37,9 +37,9 @@
 #include <MFRC522.h>
 
 // PIN Numbers : RESET + SDAs
-#define RST_PIN         49   
-#define SS_1_PIN        53   
-#define SS_2_PIN        33  
+#define RST_PIN         49
+#define SS_1_PIN        53
+#define SS_2_PIN        33
 #define SS_3_PIN        7
 #define SS_4_PIN        6
 
@@ -57,7 +57,7 @@ byte gameSquares[64];
 //this is the block number we will write into and then read.
 int block=2;  //arbitrary
 
-byte blockcontent[16] = {"K"};  
+byte blockcontent[16] = {"Q"};
 //byte blockcontent[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};  //all zeros. This can be used to delete a block.
 
 //This array is used for reading out a block.
@@ -75,7 +75,7 @@ void dump_byte_array(byte * buffer, byte bufferSize) {
 }
 
 
-#define NR_OF_READERS   2
+#define NR_OF_READERS   1
 
 
 byte ssPins[] = {SS_1_PIN, SS_2_PIN, SS_3_PIN, SS_4_PIN};
@@ -124,7 +124,7 @@ void setup() {
 
 
 //Read specific block
-int readBlock(int blockNumber, byte arrayAddress[], uint8_t reader) 
+int readBlock(int blockNumber, byte arrayAddress[], uint8_t reader)
 {
   int largestModulo4Number=blockNumber/4*4;
   int trailerBlock=largestModulo4Number+3;//determine trailer block for the sector
@@ -139,7 +139,7 @@ int readBlock(int blockNumber, byte arrayAddress[], uint8_t reader)
   }
 
 //reading a block
-byte buffersize = 18;//we need to define a variable with the read buffer size, since the MIFARE_Read method below needs a pointer to the variable that contains the size... 
+byte buffersize = 18;//we need to define a variable with the read buffer size, since the MIFARE_Read method below needs a pointer to the variable that contains the size...
 status = mfrc522[reader].MIFARE_Read(blockNumber, arrayAddress, &buffersize);//&buffersize is a pointer to the buffersize variable; MIFARE_Read requires a pointer instead of just a number
   if (status != MFRC522::STATUS_OK) {
           Serial.print("MIFARE_read() failed: ");
@@ -150,8 +150,8 @@ status = mfrc522[reader].MIFARE_Read(blockNumber, arrayAddress, &buffersize);//&
 }
 
 
-//Write specific block    
-int writeBlock(int blockNumber, byte arrayAddress[], uint8_t reader) 
+//Write specific block
+int writeBlock(int blockNumber, byte arrayAddress[], uint8_t reader)
 {
   //this makes sure that we only write into data blocks. Every 4th block is a trailer block for the access/security info.
   int largestModulo4Number=blockNumber/4*4;
@@ -159,7 +159,7 @@ int writeBlock(int blockNumber, byte arrayAddress[], uint8_t reader)
   if (blockNumber > 2 && (blockNumber+1)%4 == 0){Serial.print(blockNumber);Serial.println(" is a trailer block:");return 2;}
   Serial.print(blockNumber);
   Serial.println(" is a data block:");
-  
+
   //authentication of the desired block for access
   byte status = mfrc522[reader].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[reader].uid));
   if (status != MFRC522::STATUS_OK) {
@@ -167,8 +167,8 @@ int writeBlock(int blockNumber, byte arrayAddress[], uint8_t reader)
          Serial.println(mfrc522[reader].GetStatusCodeName(status));
          return 3;//return "3" as error message
   }
-  
-  //writing the block 
+
+  //writing the block
   status = mfrc522[reader].MIFARE_Write(blockNumber, arrayAddress, 16);
   //status = mfrc522[reader].MIFARE_Write(9, value1Block, 16);
   if (status != MFRC522::STATUS_OK) {
@@ -199,8 +199,8 @@ void loop() {
 //      dump_byte_array(mfrc522[reader].uid.uidByte, mfrc522[reader].uid.size);
 //      Serial.println();
 
-      
-//      writeBlock(block, blockcontent, reader);
+
+     // writeBlock(block, blockcontent, reader);
 
       readBlock(block, readbackblock, reader);
 
@@ -221,8 +221,8 @@ void loop() {
       Serial.println("");
 //      delay(100);
     }
-   
- 
+
+
     int square = 0;
     for (byte reader = 0; reader < NR_OF_READERS; reader++) {
       Serial.print("gameSquare: ");
@@ -234,11 +234,11 @@ void loop() {
       Serial.println("");
       square++;
     }
-    
+
 
 
     delay(5000);
 
-      
+
     }
   }
