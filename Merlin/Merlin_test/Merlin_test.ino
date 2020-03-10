@@ -1,22 +1,25 @@
-#define stepPin0 33
-#define dirPin0 35
-#define enPin0 37
+#define stepPin1 22
+#define dirPin1 24
+#define enPin1 26
 
-#define stepPin1 40
-#define dirPin1 42
-#define enPin1 44
+#define stepPin0 41
+#define dirPin0 43
+#define enPin0 45
 
 #define stepPin2 32
 #define dirPin2 34
 #define enPin2 36
 
-#define stepPin3 41 
-#define dirPin3 43
-#define enPin3 45
+#define stepPin3 33 
+#define dirPin3 35
+#define enPin3 37
 
-#define stepPin4 22
-#define dirPin4 24
-#define enPin4 26
+#define stepPin4 40
+#define dirPin4 42
+#define enPin4 44
+
+#define gripperPin 46
+#define gripperPulse 1500
 
 #define MAX_SPEED 3000
 #define ACCELERATION 1000
@@ -27,6 +30,7 @@
 
 #include <AccelStepper.h>
 #include <MultiStepper.h>
+#include <Servo.h>
 #include <math.h>
 
 AccelStepper stepper0(AccelStepper::DRIVER, stepPin0, dirPin0);
@@ -36,7 +40,9 @@ AccelStepper stepper3(AccelStepper::DRIVER, stepPin3, dirPin3);
 AccelStepper stepper4(AccelStepper::DRIVER, stepPin4, dirPin4);
 MultiStepper arm_steppers;
 
+Servo gripper;
 int pos = 600;
+int cw = 1;
 
 void setup()
 {
@@ -66,6 +72,9 @@ void setup()
     pinMode(enPin4, OUTPUT);   //enable/disable pin
     digitalWrite(enPin4, LOW);
 
+    gripper.attach(gripperPin);
+    //gripper.write(0);
+
     stepper0.setMaxSpeed(MAX_SPEED);
     stepper0.setAcceleration(ACCELERATION);
     stepper1.setMaxSpeed(MAX_SPEED);
@@ -79,8 +88,31 @@ void setup()
 
     arm_steppers.addStepper(stepper0);
     arm_steppers.addStepper(stepper1);
-    arm_steppers.addStepper(stepper2);    
+    arm_steppers.addStepper(stepper2);
+    arm_steppers.addStepper(stepper3);
+    arm_steppers.addStepper(stepper4);  
 }
+
+void actuate_gripper (int decision) {
+    //Send signal to servo to make one full rotation
+    //It only moves clockwise for now. Anticlockwise rotation is trivial but hasn't been implemented.
+
+    bool clockwise;
+
+    if (decision){
+        //clockwise
+      for (int pos = 0; pos <= 180; pos++){
+        gripper.write(pos);
+        delay(15);
+      }
+    } else{//clockwise = false
+        for (int pos = 180; pos >= 0; pos--){
+        gripper.write(pos);
+        delay(15);
+      }
+    }
+}
+
 
 void loop(){
   if (stepper0.distanceToGo() == 0)
@@ -95,9 +127,9 @@ void loop(){
       }
     stepper0.moveTo(pos);
     stepper1.moveTo(pos);
-    stepper2.moveTo(pos); 
-    stepper3.moveTo(pos+500000);
-    stepper4.moveTo(pos+5000); 
+    stepper2.moveTo(pos);
+    stepper3.moveTo(pos);
+    stepper4.moveTo(pos);
   }
 
   stepper0.run();
@@ -105,6 +137,14 @@ void loop(){
   stepper2.run();
   stepper3.run();
   stepper4.run();
+  
+//  actuate_gripper(true);
+//  delay(500);
+//  actuate_gripper(false);
+
+//  if(cw == 1){
+//    cw = -1;
+//    }else{ cw = 1;}
   
 //  long positions[3];
 //

@@ -24,26 +24,20 @@
 
 #include "IK_calc.h"
 
-void calcIK_2R (double x, double y, double* theta0, double* theta1, double* theta2) {
+void calcIK_2R (double x, double y, double& theta0, double& theta1) {
     //Calculate the thetas for a 2 bone, 2 joint solutions. This is for test purposes
     // only at the moment.
     //INPUTS:
     // x = the 3D x coordinate for the end effector.
     // y = the 3D z coordinate for the end effector.
     // theta0,1,2 = the angles that the shoulder, elbow and wrist motors must achieve respectively.
+    int sigma = 1;
 
-    double y_new = 0.0;
-    int sigma = -1;
-
-    
-    y_new = y+WRIST_LEN;
-
-    *theta2 = 0; // For the simplified 2R solution the wrist theta is always 0.
-    *theta1 = sigma*acos((pow(x, 2) + pow(y_new, 2) - pow(SHOULDER_LEN, 2) - pow(ELBOW_LEN, 2))/(2*SHOULDER_LEN*ELBOW_LEN));
-    *theta0 = atan(y_new/x) - sigma*atan((ELBOW_LEN*sin((*theta1)))/(SHOULDER_LEN + ELBOW_LEN*cos((*theta1))));
+    theta1 = sigma*acos((x*x + y*y - SHOULDER_LEN*SHOULDER_LEN - ELBOW_LEN*ELBOW_LEN)/(2*SHOULDER_LEN*ELBOW_LEN)); // For the simplified 2R solution the wrist theta is always 0.
+    theta0 = atan(y/x) - atan((ELBOW_LEN*sin(theta2))/(SHOULDER_LEN+ELBOW_LEN*cos(theta2)));
 }
 
-void calcIK_3R (double x, double y, double* theta0, double* theta1, double* theta2) {
+void calcIK_3R (double x, double y, double phi, double& theta0, double& theta1, double& theta2) {
     //Calculate the thetas for a 3 bone, 3 joint solutions. For reference for these
     // equations check the documentation at the top of this file.
     //INPUTS:
@@ -51,37 +45,47 @@ void calcIK_3R (double x, double y, double* theta0, double* theta1, double* thet
     // y = the 3D z coordinate for the end effector.
     // theta0,1,2 = the angles that the shoulder, elbow and wrist motors must achieve respectively.
 
-    int  sigma = -1; //Determines which solution to use for theta 1, we always want the one that give a theta < 90 degrees.
-    double gamma = 90; //This is the angle we want to wrist bone to make with the x-axis. For now it's always going to be 90 degrees.
-    double x_p = 0;
-    double y_p = 0;
-    double zeta = 0;
-    double *pargs;
+    int  sigma = 1; //Determines which solution to use for theta 1, we always want the one that give a theta < 90 degrees.
+    double x_3 = 0;
+    double y_3 = 0;
 
     //To simplify the equations we use some intermediary equations
-    x_p = (x - WRIST_LEN*cos(gamma));
-    y_p = (y - WRIST_LEN*sin(gamma));
-    zeta = atan2(((-1*x_p)/pow((pow(x_p,2) + pow(y_p,2)), 0.5)), ((-1*x)/pow(( pow(x_p, 2) + pow(y_p, 2)), 0.5)));
+    x_3 = (x - WRIST_LEN*cos(phi));
+    y_3 = (y - WRIST_LEN*sin(phi));
 
-    *theta0 = zeta + sigma*acos((pow(x_p, 2) + pow(y_p, 2) + pow(SHOULDER_LEN, 2) - pow(ELBOW_LEN, 2))/(2*SHOULDER_LEN*pow((pow(x_p, 2) + pow(y_p, 2)), 0.5)));
-    *theta1 = atan2(((y_p - SHOULDER_LEN*sin((*theta0)))/ELBOW_LEN), ((x_p - SHOULDER_LEN*cos((*theta0)))/ELBOW_LEN));
-    *theta2 = gamma - ((*theta0) - (*theta1));
+    calcIK_2R(x_3, y_3, theta0, theta1);
+    theta2 = phi - theta0 - theta1;
+
+    // zeta = atan2(((-1*x_p)/pow((pow(x_p,2) + pow(y_p,2)), 0.5)), ((-1*x)/pow((pow(x_p, 2) + pow(y_p, 2)), 0.5)));
+
+    // theta0 = zeta + sigma*acos((pow(x_p, 2) + pow(y_p, 2) + pow(SHOULDER_LEN, 2) - pow(ELBOW_LEN, 2))/(2*SHOULDER_LEN*pow((pow(x_p, 2) + pow(y_p, 2)), 0.5)));
+    // theta1 = atan2(((y_p - SHOULDER_LEN*sin(theta0))/ELBOW_LEN), ((x_p - SHOULDER_LEN*cos(theta0))/ELBOW_LEN)) - theta0;
+    // theta2 = gamma - (theta0 - theta1);
 }
 
 void calculate_steps (double* coords, long* steps) {
     double x = coords[0];
     double y = coords[1];
     double z = coords[2];
+    double phi = coords[3]
     double shoulder_theta = 0;
     double elbow_theta = 0;
     double wrist_theta = 0;
 
-    //calcIK_2R(x, z, &shoulder_theta, &elbow_theta, &wrist_theta);
-    calcIK_3R(x, z, &shoulder_theta, &elbow_theta, &wrist_theta);
+//    shoulder_theta = x;
+//    elbow_theta = y;
+//    wrist_theta = z;
 
-    steps[0] = (long) (shoulder_theta/STEP_ANGLE);
-    steps[1] = (long) (elbow_theta/STEP_ANGLE);
-    steps[2] = (long) (wrist_theta/STEP_ANGLE);
-    steps[3] = (long) (tan(x/y)/STEP_ANGLE); //base rotation steps
-    steps[4] = 0;  //Wrist joint roll rotation steps. For now this motor is not being used, it will be for controling piece orientation later.
+    //calcIK_2R(x, z, shoulder_theta, elbow_theta, wrist_theta);
+    calcIK_3R(z, x, phi, shoulder_theta, elbow_theta, wrist_theta);
+    
+
+//    steps[0] = (long) ((180.0*shoulder_theta)/(M_PI*STEP_ANGLE));
+//    steps[1] = (long) ((180.0*elbow_theta)/(M_PI*STEP_ANGLE));
+//    steps[2] = (long) ((180.0*wrist_theta)/(M_PI*STEP_ANGLE));
+    steps[0] = (long) shoulder_theta;
+    steps[1] = (long) elbow_theta;
+    steps[2] = (long) wrist_theta;
+    steps[3] = (long) ((180*atan(x/y))/(M_PI*STEP_ANGLE)); //base rotation steps
+    steps[4] = 360;  //Wrist joint roll rotation steps. For now this motor is not being used, it will be for controling piece orientation later.
 }

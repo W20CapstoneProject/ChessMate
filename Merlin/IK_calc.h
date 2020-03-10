@@ -4,12 +4,12 @@
 #include "math.h"
 #include "stepper_config.h"
 #define DEBUG 1
-#define SHOULDER_LEN 30.0
-#define ELBOW_LEN 30.0
-#define WRIST_LEN 10.0
+#define SHOULDER_LEN 220.0
+#define ELBOW_LEN 220.0
+#define WRIST_LEN 95.0
 
 //Function prototypes
-void calcIK_2R(double, double, double*, double*, double*);
-void calcIK_3R(double, double, double*, double*, double*);
+void calcIK_2R(double, double, double&, double&, double&);
+void calcIK_3R(double, double, double&, double&, double&);
 void calculate_steps(double*, long*);
 #endif
