@@ -19,33 +19,33 @@ class InverseKinematics:
         self.sigma = 1
 
 
-    def forward(self, o1, o2, o3):
+    def solve_forward(self, o1, o2, o3):
         '''
         Solve the forward inverse kinematics equation.
         '''
         x = self.l1*cos(o1) + self.l2*cos(o1+o2) + self.l3*cos(o1+o2+o3)
         y = self.l1*sin(o1) + self.l2*sin(o1+o2) + self.l3*sin(o1+o2+o3)
         phi = (o1 + o2 + o3)
-        return x,y,phi
+        return x, y, phi
 
 
-    def solve2R(self, x, y):
+    def solve_2R(self, x, y):
         '''
         Solve the 2r planar manipulator inverse kinematics problem.
         '''
         #r =  sqrt(x*x + y*y)
-        theta2 = (sigma)*acos((x*x + y*y - self.l1*self.l1 - self.l2*self.l2)/(2*self.l1*self.l2))
+        theta2 = (self.sigma)*acos((x*x + y*y - self.l1*self.l1 - self.l2*self.l2)/(2*self.l1*self.l2))
         theta1 = atan(y/x) - atan((self.l2*sin(theta2))/(self.l1+self.l2*cos(theta2)))
         return theta1, theta2
 
 
-    def inverse(self, x, y, phi):
+    def solve_inverse(self, x, y, phi):
         '''
         Solve the inverse kinematics equation.
         '''
-        x3 = x-l3*cos(phi)
-        y3 = y-l3*sin(phi)
-        o1,o2 = solve2R(x3, y3)
+        x3 = x - self.l3*cos(phi)
+        y3 = y - self.l3*sin(phi)
+        o1,o2 = self.solve_2R(x3, y3)
         o3 = phi - o1 - o2
         return [o1, o2, o3]
 
@@ -55,7 +55,8 @@ class IKMapping:
     Map out results from inverse kinematics.
     '''
 
-    def plotxy(self, n, m):
+    def plot_xy(self, n, m):
+        ik = InverseKinematics()
         xs = list()
         ys = list()
         x1 = list()
@@ -70,7 +71,7 @@ class IKMapping:
         for o1 in x1:
             for o2 in x2:
                 for o3 in x3:
-                    x,y,phi = forward(o1,o2,o3)
+                    x,y,phi = ik.solve_forward(o1,o2,o3)
                     if((x>0) and (y>0)):
                         xs.append(x)
                         ys.append(y)
