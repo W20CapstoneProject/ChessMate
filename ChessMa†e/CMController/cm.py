@@ -7,6 +7,8 @@ from board import GameBoard
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
+from ik import InverseKinematics
+from cm_command import CMCommand
 
 
 class CMController:
@@ -28,6 +30,8 @@ class CMController:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
         self.board = GameBoard()
+        self.ik = InverseKinematics()
+        self.command_handler = CMCommand()
         self.log = logging.basicConfig(filename=self.config['CM']['error_log'],level=logging.ERROR)
 
 
@@ -74,43 +78,20 @@ class CMController:
         return complete
 
 
-    def get_coordinates(self, square_number):
+    def execute_move(self, move):
         '''
-        Call to receive a coordinate command from the square number.
-        March 2, 2020: Will work once the sub routines are verified. Also might need to change call pattern.
-        '''
-        x = self.board.get_coordinate_x(square_number)
-        y = self.board.get_coordinate_y(square_number)
-        z = self.board.get_coordinate_z()
-        return [x, y, z]
+        Main program call to chain all commands together based off of one given move
+        Returns success boolean when move is completed.
 
-
-    def create_commands(self, moves):
-        '''
-        Create the command sequence for the Merlin software.
-
-        The each action will have a starting and ending points.
-
-        March 2, 2020: Needs to be implemented still.
-        '''
-        for move in moves:
-            print(move)
-
-        return 0
-
-
-    def execute_moves(self, moves):
-        '''
-        Main program call to chain all commands together based off of given move
-        Returns success boolean.
-
+        Moves - array of moves that need to be executed in order for the chess action
         March 2, 2020: Needs to be implemented still.
         '''
         try:
             if (self.is_connected()):
                 print('Executing command')
-                self.create_commands(move)
-                self.log.error("Executing command.")
+                for move in moves:
+                    print(move)
+                    move.create_command(self.command_handler)
         except:
             self.log.error("Could not execute command.")
 
