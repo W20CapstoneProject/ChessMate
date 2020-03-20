@@ -23,7 +23,7 @@ class MoveoArm:
         self.grip = GripJoint(int(self.config['MOVEO']['grip_constraint']))
 
 
-    def issueStepCommands(step1, step2, step3, step4, step5):
+    def issueStepCommands(self, step1, step2, step3, step4, step5):
         '''
         Check constraints for each joint and return the allowed steps.
         '''
@@ -44,13 +44,13 @@ class Joint:
         self.position = position
 
     def check_constraint(self, steps):
-        if (self.position + steps <= constraint):
+        if (self.position + steps <= self.constraint):
             return True
         else:
             return False
 
     def issueSteps(self, steps):
-        if (check_constraint(steps) is True):
+        if (self.check_constraint(steps) is True):
             return steps
         else:
             return self.constraint - self.position
