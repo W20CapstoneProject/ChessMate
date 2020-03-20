@@ -19,17 +19,17 @@ class InverseKinematics:
         self.sigma = 1
 
 
-    def forward(self, o1, o2, o3):
+    def solve_forward(self, o1, o2, o3):
         '''
         Solve the forward kinematics equation.
         '''
         x = self.l1*cos(o1) + self.l2*cos(o1+o2) + self.l3*cos(o1+o2+o3)
         y = self.l1*sin(o1) + self.l2*sin(o1+o2) + self.l3*sin(o1+o2+o3)
         phi = (o1 + o2 + o3)
-        return x,y,phi
+        return x, y, phi
 
 
-    def solve2R(self, x, y):
+    def solve_2R(self, x, y):
         '''
         Solve the 2r planar manipulator inverse kinematics problem.
         '''
@@ -39,7 +39,7 @@ class InverseKinematics:
         return theta1, theta2
 
 
-    def inverse(self, x, y, phi):
+    def solve_inverse(self, x, y, phi):
         '''
         Solve the 3R inverse kinematics equation.
         '''
@@ -57,7 +57,8 @@ class IKMapping:
     def __init__(self):
         self.ik_engine = InverseKinematics()
 
-    def plotxy(self, n, m):
+    def plot_xy(self, n, m):
+        ik = InverseKinematics()
         xs = list()
         ys = list()
         x1 = list()

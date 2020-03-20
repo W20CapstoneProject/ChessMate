@@ -1,5 +1,6 @@
 import configparser
 import math
+import matplotlib.pyplot as pyplot
 
 class GameBoard:
     '''
@@ -11,6 +12,13 @@ class GameBoard:
 
     def __init__(self):
         self.CONFIG = configparser.ConfigParser()
+        self.CONFIG_FILE = 'config.ini'
+        self.configure()
+
+    def configure(self):
+        '''
+        Use to read in latest config file
+        '''
         self.CONFIG.read('config.ini')
         self.SQUARE_LENGTH = int(self.CONFIG['BOARD']['square_length'])
         self.SQUARE_WIDTH= int(self.CONFIG['BOARD']['square_width'])
@@ -60,6 +68,17 @@ class GameBoard:
         return z + self.Z_BIAS
 
 
+    def get_coordinates(self, square_number):
+        '''
+        Call to receive a coordinate command from the square number.
+        March 2, 2020: Will work once the sub routines are verified. Also might need to change call pattern.
+        '''
+        x = self.get_coordinate_x(square_number)
+        y = self.get_coordinate_y(square_number)
+        z = self.get_coordinate_z()
+        return (x, y, z)
+
+
 class BoardMapping:
     '''
     BoardMapping
@@ -77,15 +96,6 @@ class BoardMapping:
 
         March 2, 2020: Needs to be implemented still. Only used to verify coordinate map.
         '''
-
-        '''
-        board_map = []
-        for index in range(1,65):
-            cmd = self.cm.get_coordinate_command(index, "K")
-            plt.plot(cmd)
-            print("Square Number: " + str(index) + " " + str(cmd) +"\n")
-        '''
-
         '''
         label = "{:.2f}".format(y)
         plt.annotate(label, # this is the text
@@ -93,9 +103,11 @@ class BoardMapping:
                  textcoords="offset points", # how to position the text
                  xytext=(0,10), # distance from text to points (x,y)
                  ha='center') # horizontal alignment can be left, right or center
-        plt.scatter([-3.0], [48.0], label="Some Point")
-        plt.xlabel('X Displacement')
-        plt.ylabel('Y Displacement')
-        plt.show()
         '''
-        return 0
+        xs = list()
+        ys = list()
+        for index in range(1,65):
+            xs.append(self.board.get_coordinate_x(index))
+            ys.append(self.board.get_coordinate_y(index))
+        pyplot.scatter(xs, ys)
+        pyplot.show()
