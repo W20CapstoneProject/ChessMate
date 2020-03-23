@@ -21,8 +21,8 @@
 #define gripperPin 46
 #define gripperPulse 1500
 
-#define MAX_SPEED 3000
-#define ACCELERATION 1000
+#define MAX_SPEED 1000
+#define ACCELERATION 100
 #define INTERFACE_TYPE 1 //Driver interface
 #define NUM_STEPPERS 5
 #define STEP_ANGLE 1.8
@@ -41,7 +41,7 @@ AccelStepper stepper4(AccelStepper::DRIVER, stepPin4, dirPin4);
 MultiStepper arm_steppers;
 
 Servo gripper;
-int pos = 600;
+int pos = 200;
 int cw = 1;
 
 void setup()
@@ -126,17 +126,17 @@ void loop(){
       //digitalWrite(enPin, LOW);
       }
     stepper0.moveTo(pos);
-    stepper1.moveTo(pos);
-    stepper2.moveTo(pos);
-    stepper3.moveTo(pos);
-    stepper4.moveTo(pos);
+//    stepper1.moveTo(pos);
+//    stepper2.moveTo(pos);
+//    stepper3.moveTo(pos);
+//    stepper4.moveTo(pos);
   }
 
   stepper0.run();
-  stepper1.run();
-  stepper2.run();
-  stepper3.run();
-  stepper4.run();
+//  stepper1.run();
+//  stepper2.run();
+//  stepper3.run();
+//  stepper4.run();
   
 //  actuate_gripper(true);
 //  delay(500);

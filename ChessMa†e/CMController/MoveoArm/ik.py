@@ -41,11 +41,11 @@ class InverseKinematics:
 
     def solve_inverse(self, x, y, phi):
         '''
-        Solve the inverse kinematics equation.
+        Solve the 3R inverse kinematics equation.
         '''
-        x3 = x - self.l3*cos(phi)
-        y3 = y - self.l3*sin(phi)
-        o1,o2 = self.solve_2R(x3, y3)
+        x3 = x-self.l3*cos(phi)
+        y3 = y-self.l3*sin(phi)
+        o1,o2 = self.solve2R(x3, y3)
         o3 = phi - o1 - o2
         return [o1, o2, o3]
 
@@ -54,6 +54,8 @@ class IKMapping:
     '''
     Map out results from inverse kinematics.
     '''
+    def __init__(self):
+        self.ik_engine = InverseKinematics()
 
     def plot_xy(self, n, m):
         ik = InverseKinematics()
@@ -71,9 +73,33 @@ class IKMapping:
         for o1 in x1:
             for o2 in x2:
                 for o3 in x3:
-                    x,y,phi = ik.solve_forward(o1,o2,o3)
+                    x,y,phi = self.ik_engine.forward(o1,o2,o3)
                     if((x>0) and (y>0)):
                         xs.append(x)
                         ys.append(y)
         pyplot.scatter(ys,xs)
         pyplot.show()
+    
+    def show_arm(self, o1, o2, o3, polar=False):
+        x1 = self.ik_engine.l1*cos(o1)
+        x2 = x1 + self.ik_engine.l2*cos(o1+o2)
+        x3 = x2 + self.ik_engine.l3*cos(o1+o2+o3)
+        y1 = self.ik_engine.l1*sin(o1)
+        y2 = y1 + self.ik_engine.l2*sin(o1+o2)
+        y3 = y2 + self.ik_engine.l3*sin(o1+o2+o3)
+
+        r1 = self.ik_engine.l1
+        r2 = (x2*x2 + y2*y2)**0.5
+        r3 = (x3*x3 + y3*y3)**0.5
+
+        if(polar):
+            y_vals = [0, r1, r2, r3]
+            x_vals = [0, o1, o1+o2, o1+o2+o3]
+            pyplot.polar(x_vals, y_vals)
+        else:
+            x_vals = [0, x1, x2, x3]
+            y_vals = [0, y1, y2, y3]
+            pyplot.plot(y_vals, x_vals)
+        pyplot.show()
+
+        return x_vals, y_vals
