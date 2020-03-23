@@ -11,7 +11,6 @@ SerialCM cm;
 
 void setup() {
   Serial.begin(baudRate);
-  cm.helloWorld();
 }
 
 

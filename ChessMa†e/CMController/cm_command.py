@@ -1,5 +1,5 @@
 
-from ik import InverseKinematics
+from MoveoArm import ik
 from board import GameBoard
 
 class CMCommand:
@@ -7,7 +7,7 @@ class CMCommand:
     Contains method for converting moves into commands
     '''
     def __init__(self):
-        self.ik = InverseKinematics()
+        self.ik = ik.InverseKinematics()
         self.board = GameBoard()
 
 
@@ -20,6 +20,6 @@ class CMCommand:
         3. Convert joint rotations angles to steps
         '''
         coordinates = self.get_coordinates(square_number)
-        joints = self.ik.solve_inverse(coordinates[0], coordinates[1], 0)
+        joints = self.ik.solve_inverse(coordinates[0], coordinates[1], coordinates[2])
         steps = 0
         return steps

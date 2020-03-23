@@ -7,8 +7,9 @@ from board import GameBoard
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
-from ik import InverseKinematics
+
 from cm_command import CMCommand
+from MoveoArm import moveo_arm
 
 
 class CMController:
@@ -30,7 +31,6 @@ class CMController:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
         self.board = GameBoard()
-        self.ik = InverseKinematics()
         self.command_handler = CMCommand()
         self.log = logging.basicConfig(filename=self.config['CM']['error_log'],level=logging.ERROR)
 
@@ -78,6 +78,14 @@ class CMController:
         return complete
 
 
+    def start(self):
+        '''
+        Connect to the Moveo Arm. If the arm is connected then return true otherwise false.
+        '''
+        self.connect()
+        return self.is_connected()
+
+
     def execute_move(self, move):
         '''
         Main program call to chain all commands together based off of one given move
@@ -91,7 +99,8 @@ class CMController:
                 print('Executing command')
                 for move in moves:
                     print(move)
-                    move.create_command(self.command_handler)
+                    cmds = move.get_commands(self.command_handler)
+                    arm.send_command()
         except:
             self.log.error("Could not execute command.")
 
