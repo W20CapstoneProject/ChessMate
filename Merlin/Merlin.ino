@@ -4,7 +4,7 @@
 //              it can communicate with the stepper motor driver
 //              array that drives the stepper motors of the Moveo
 //              robot arm. It additionaly will convert the 3 dimensional
-//              coordinates received from the CMController 
+//              coordinates received from the CMController
 //              into steps for the motors such that the arm's
 //              end effector will reach the desired end point.
 //**A NOTE ON MEMORY MANAGEMENT: I am avoiding dynamic memory allocation
@@ -18,14 +18,17 @@
 #include "Arduino.h"
 #include "pin.h"
 #include "IK_calc.h"
+#include "SerialCM/SerialCM.h"
+#include "MoveoArm/MoveoArm.h"
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 #include <Servo.h>
 
 
+
 int stepPins[NUM_STEPPERS] = {stepPin_shoulder, stepPin_elbow, stepPin_wrist, stepPin_base, stepPin_roll};
 int dirPins[NUM_STEPPERS]  = {dirPin_shoulder, dirPin_elbow, dirPin_wrist, dirPin_base, dirPin_roll};
-int enPins[NUM_STEPPERS]   = {enPin_shoulder, enPin_elbow, enPin_wrist, enPin_base, enPin_roll}; 
+int enPins[NUM_STEPPERS]   = {enPin_shoulder, enPin_elbow, enPin_wrist, enPin_base, enPin_roll};
 //Unfortunately there is no way to initlize these as an array. It must be individual objects.
 AccelStepper stepper_shoulder(AccelStepper::DRIVER, stepPins[0], dirPins[0]);
 AccelStepper stepper_elbow(AccelStepper::DRIVER, stepPins[1], dirPins[1]);
@@ -36,8 +39,9 @@ AccelStepper stepper_roll(AccelStepper::DRIVER, stepPins[4], dirPins[4]);
 MultiStepper arm_steppers;
 
 Servo gripper;
+int NEW_MOVE_SIZE = 4;
 
-double new_move[5];
+double new_move[4];
 double previous_move[5];
 
 void setup(){
@@ -49,7 +53,7 @@ void setup(){
       pinMode(enPins[i], OUTPUT);   //enable/disable pin
       digitalWrite(enPins[i], LOW); //initially disable the motors
     }
-    
+
 //    //Setup all the pins for the stepper drivers
 //    pinMode(stepPin_shoulder, OUTPUT); //step pulse pin
 //    pinMode(dirPin_shoulder, OUTPUT);  //rotional direction control pin
@@ -66,12 +70,12 @@ void setup(){
 //    pinMode(enPin_wrist, OUTPUT);
 //    digitalWrite(enPin_wrist, LOW);
 //
-//    pinMode(stepPin_base, OUTPUT); 
+//    pinMode(stepPin_base, OUTPUT);
 //    pinMode(dirPin_base, OUTPUT);
 //    pinMode(enPin_base, OUTPUT);
 //    digitalWrite(enPin_base, LOW);
 //
-//    pinMode(stepPin_roll, OUTPUT); 
+//    pinMode(stepPin_roll, OUTPUT);
 //    pinMode(dirPin_roll, OUTPUT);
 //    pinMode(enPin_roll, OUTPUT);
 //    digitalWrite(enPin_roll, LOW);
@@ -79,7 +83,7 @@ void setup(){
     pinMode(gripperPin, OUTPUT);
 
     //Configure stepper base parameters and add them all to the MultiStepper
-    // controller    
+    // controller
     stepper_shoulder.setMaxSpeed(MAX_SPEED);
     stepper_shoulder.setAcceleration(ACCELERATION);
     arm_steppers.addStepper(stepper_shoulder);
@@ -87,7 +91,7 @@ void setup(){
     stepper_elbow.setMaxSpeed(MAX_SPEED);
     stepper_elbow.setAcceleration(ACCELERATION);
     arm_steppers.addStepper(stepper_elbow);
-    
+
     stepper_wrist.setMaxSpeed(MAX_SPEED);
     stepper_wrist.setAcceleration(ACCELERATION);
     arm_steppers.addStepper(stepper_wrist);
@@ -95,7 +99,7 @@ void setup(){
     stepper_base.setMaxSpeed(MAX_SPEED);
     stepper_base.setAcceleration(ACCELERATION);
     arm_steppers.addStepper(stepper_base);
-    
+
     stepper_roll.setMaxSpeed(MAX_SPEED);
     stepper_roll.setAcceleration(ACCELERATION);
     arm_steppers.addStepper(stepper_roll);
@@ -140,7 +144,7 @@ void loop() {
       Serial.print("/rWaiting...");
       Serial.print(w);
       Serial.flush();
-      w++;      
+      w++;
     }
     if (new_move != previous_move){
         //VARIABLE MANAGEMENT*******************************
@@ -149,7 +153,7 @@ void loop() {
         double coords[4];                 //3D coordinates of end point
         long origin[NUM_STEPPERS] = {0, 0, 0, 0, 0};
         int gripper_instruction;        //open or close gripper
-        
+
         //get new move data
         Serial.print("\nPRE-CALC coords ********************\n");
         gripper_instruction = (int) new_move[4];
@@ -188,7 +192,7 @@ void loop() {
              Serial.print("\n");
           }
         }
-        
+
         //execute the requested move
         arm_steppers.moveTo(joint_steps);
         arm_steppers.runSpeedToPosition();

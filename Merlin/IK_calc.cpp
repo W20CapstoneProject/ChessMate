@@ -24,7 +24,7 @@
 
 #include "IK_calc.h"
 
-void calcIK_2R (double x, double y, double& theta0, double& theta1) {
+void calcIK_2R (double x, double y, double& theta0, double& theta1, double& theta2) {
     //Calculate the thetas for a 2 bone, 2 joint solutions. This is for test purposes
     // only at the moment.
     //INPUTS:
@@ -53,7 +53,7 @@ void calcIK_3R (double x, double y, double phi, double& theta0, double& theta1, 
     x_3 = (x - WRIST_LEN*cos(phi));
     y_3 = (y - WRIST_LEN*sin(phi));
 
-    calcIK_2R(x_3, y_3, theta0, theta1);
+    calcIK_2R(x_3, y_3, theta0, theta1, theta2);
     theta2 = phi - theta0 - theta1;
 
     // zeta = atan2(((-1*x_p)/pow((pow(x_p,2) + pow(y_p,2)), 0.5)), ((-1*x)/pow((pow(x_p, 2) + pow(y_p, 2)), 0.5)));
@@ -67,7 +67,7 @@ void calculate_steps (double* coords, long* steps) {
     double x = coords[0];
     double y = coords[1];
     double z = coords[2];
-    double phi = coords[3]
+    double phi = coords[3];
     double shoulder_theta = 0;
     double elbow_theta = 0;
     double wrist_theta = 0;
@@ -77,7 +77,7 @@ void calculate_steps (double* coords, long* steps) {
 //    wrist_theta = z;
 
     //calcIK_2R(x, z, shoulder_theta, elbow_theta, wrist_theta);
-    calcIK_3R(z, x, phi, shoulder_theta, elbow_theta, wrist_theta);
+    //calcIK_3R(z, x, phi, shoulder_theta, elbow_theta, wrist_theta);
     
 
 //    steps[0] = (long) ((180.0*shoulder_theta)/(M_PI*STEP_ANGLE));

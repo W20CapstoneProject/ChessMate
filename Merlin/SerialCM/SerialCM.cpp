@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include "SerialCM.h"
 
-String _ACK;
-String _incomingByte;
+String ACK;
+String incomingByte;
 
 
 SerialCM::SerialCM(){
@@ -12,8 +12,8 @@ SerialCM::SerialCM(){
 SerialCM::~SerialCM(){}
 
 void SerialCM::init() {
-  _ACK = "ACK";
-  _incomingByte = "";
+  ACK = "ACK";
+  incomingByte = "";
 }
 
 /*
@@ -21,9 +21,9 @@ void SerialCM::init() {
   Use to begin serial communication with the connected computer.
 */
 void SerialCM::serialCommunication() {
-    _incomingByte = Serial.readString();
+    incomingByte = Serial.readString();
     Serial.print("ACK");
-    handleCommand(_incomingByte);
+    handleCommand(incomingByte);
 }
 
 

@@ -2,7 +2,7 @@ from numpy import radians, degrees
 from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
 import matplotlib.pyplot as pyplot
 import configparser
-from moveo import MoveoArm
+from . import moveo_arm
 
 class InverseKinematics:
     '''
@@ -12,7 +12,7 @@ class InverseKinematics:
     '''
 
     def __init__(self):
-        self.arm = MoveoArm()
+        self.arm = moveo_arm.MoveoArm()
         self.l1 = self.arm.bone_1
         self.l2 = self.arm.bone_2
         self.l3 = self.arm.bone_3
