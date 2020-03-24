@@ -18,9 +18,12 @@
 #include "Arduino.h"
 #include "pin.h"
 #include "IK_calc.h"
+#include "SerialCM/SerialCM.h"
+#include "MoveoArm/MoveoArm.h"
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 #include <Servo.h>
+
 
 
 int stepPins[NUM_STEPPERS] = {stepPin_shoulder, stepPin_elbow, stepPin_wrist, stepPin_base, stepPin_roll};
@@ -36,8 +39,9 @@ AccelStepper stepper_roll(AccelStepper::DRIVER, stepPins[4], dirPins[4]);
 MultiStepper arm_steppers;
 
 Servo gripper;
+int NEW_MOVE_SIZE = 4;
 
-double new_move[5];
+double new_move[4];
 double previous_move[5];
 
 void setup(){
