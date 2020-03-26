@@ -8,6 +8,7 @@ class Joint:
         self.gear_ratio = gear_ratio
         self.steps_per_rev = 400
         self.step_ratio = 0.9
+        
 
     def check_constraint(self, steps):
         '''
@@ -26,6 +27,7 @@ class Joint:
             return steps
         else:
             return self.constraint - self.step_position
+
 
     def calculate_steps(self, degrees):
         '''

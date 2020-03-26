@@ -1,11 +1,11 @@
 '''
-Demo
+CLI
 Use to send instructions to the Merlin via serial connection.
 
 March 2, 2020: Still need to finishing implementing sending serial commands.
 '''
 
-import cm
+from cmc import CMController
 import re
 import subprocess
 import sys
@@ -13,17 +13,17 @@ import fileinput
 
 
 print("\n*** Welcome to CMController Demo Mode! ***")
-cm_controller = cm.CMController()
+cm_controller = CMController()
 cm_controller.connect()
 
 if (cm_controller.is_connected() == False):
-    devices = cm.list_serial_devices()
+    devices = cm_controller.list_serial_devices()
     while True:
-        command = input("\nPlease select one of the available serial devices: ")
-        if (command == "done"):
+        buffer = input("\nPlease select one of the available serial devices: ")
+        if (buffer == "done"):
             sys.exit(0)
         try:
-            cm_controller.connect(devices[int(command)])
+            cm_controller.connect(devices[int(buffer)])
             if (cm_controller.is_connected()):
                 break
         except:
@@ -31,11 +31,10 @@ if (cm_controller.is_connected() == False):
 
 
 while True:
-    command = input(':: ')
-    if (command == "done"):
+    buffer = input(':: ')
+    if (buffer == "done"):
         cm_controller.device.close()
         sys.exit(0)
     else: 
-        #switch statement her for now for each type of instruction
-
-    cm_controller.send_command(command)
+        command = buffer
+        cm_controller.send_command(command)

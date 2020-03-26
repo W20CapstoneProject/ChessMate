@@ -6,21 +6,32 @@ March 2, 2020: Need to write accurate unit test cases for the CMController class
 '''
 import sys
 import unittest
-from cm import CMController
+from cmc import CMController
+from cm_moveo import CMMoveo
 from CMGame.board import GameBoard, BoardMapping
-from CMGame.move import Move
-from MoveoArm.command import Command
+from MoveoArm.instruction import InstructionManager, MoveInstruction, BaseInstruction
 from MoveoArm.ik import InverseKinematics
 from MoveoArm.moveo_arm import MoveoArm
 from CMGame.piece import PieceManager
-
+from CMGame.move import MoveManager
+from CMGame.interface import CMGameInterface
 
 class TestCMController(unittest.TestCase):
+    '''
+    Methods of CMController:
+    - connect() [Not Tested]
+    - is_connected() [Not Tested]
+    - list_serial_devices() [Not Tested]
+    - send_command() [Not Tested]
+    '''
+    pass
+
+
+
+class TestCMGame(unittest.TestCase):
 
     def setUp(self):
         self.board = GameBoard()
-        self.cm = CMController()
-        self.cm_command = Command(self.board)
 
     def get_coordinate(self):
         board_map = []
@@ -31,14 +42,6 @@ class TestCMController(unittest.TestCase):
         index = 4
         cmd = self.board.get_coordinates(index)
         print(cmd)
-
-
-    def test_execute_moves(self):
-        pm = PieceManager()
-        pawn = pm.pawn
-        move = Move(piece = pawn, start = 1, end = 2)
-        commands = self.cm.execute_move(move)
-
 
     def mapBoard(self):
         map = BoardMapping()
@@ -65,6 +68,19 @@ class TestMoveoArm(unittest.TestCase):
         print(constraints1)
         print(constraints2)
 
+    def test_instructions(self):
+        i_manager = InstructionManager()
+        mi = i_manager.get_move_instruction("+102", "-035", "-109", "+004", 0)
+        bi = i_manager.get_base_instruction("+102")
+        si = i_manager.get_shoulder_instruction("-035")
+        ei = i_manager.get_elbow_instruction("-109")
+        wi = i_manager.get_wrist_instruction("+004")
+        print("Move instruction: " + mi)
+        print("Base instruction: " + bi)
+        print("Shoulder instruction: " + si)
+        print("Elbow instruction: " + ei)
+        print("Wrist instruction: " + wi)
+
 
 class TestIK(unittest.TestCase):
     def setUp(self):
@@ -81,6 +97,26 @@ class TestIK(unittest.TestCase):
         inverse = self.ik.solve_inverse(forward[0], forward[1], forward[2])
         print("Forward 12 12 12 -> " + str(forward))
         print("Inverse -> " + str(inverse))
+
+
+
+class TestCMMoveo(unittest.TestCase):
+    def setUp(self):
+        self.cmc_moveo = CMMoveo()
+        self.game = CMGameInterface()
+        self.mm = self.game.get_move_manager()
+        self.pm = self.game.get_piece_manager()
+
+    def test_start(self):
+        self.cmc_moveo.start()
+
+    def test_execute_move(self):
+        print("Executing move..")
+        self.cmc_moveo.start()
+        pawn = self.pm.get_pawn()
+        move = self.mm.get_move(pawn, 1, 2)
+        result = self.cmc_moveo.execute_move(move)
+        print(result)
 
 
 

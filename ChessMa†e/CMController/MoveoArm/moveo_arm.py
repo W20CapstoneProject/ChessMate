@@ -1,8 +1,3 @@
-from numpy import radians, degrees
-from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
-import matplotlib.pyplot as pyplot
-import configparser
-import serial
 from .joint import BaseJoint, ShoulderJoint, ElbowJoint, WristJoint, GripJoint
 
 
@@ -14,6 +9,7 @@ class MoveoArm:
     '''
 
     def __init__(self):
+        self.postion = (0,0,0,0,0)
         self.bone_1 = 220
         self.bone_2 = 220
         self.bone_3 = 95
@@ -22,6 +18,7 @@ class MoveoArm:
         self.elbow = ElbowJoint()
         self.wrist = WristJoint()
         self.grip = GripJoint()
+        
 
     def check_constraints(self, steps):
         '''
@@ -33,14 +30,30 @@ class MoveoArm:
         shoulder = self.shoulder.issue_steps(steps[1])
         elbow = self.elbow.issue_steps(steps[2])
         wrist = self.wrist.issue_steps(steps[3])
-        grip = self.grip.issue_steps(steps[4])
-        return (base, shoulder, elbow, wrist, grip)
+        return (base, shoulder, elbow, wrist)
 
-    def calculate_steps(self, degrees):
-        pass
 
-    def update_position(self):
-        pass
+    def calculate_steps(self, base_d, shoulder_d, elbow_d, wrist_d):
+        '''
+        Given the desired degrees for rotation, calculate the steps for each motor.
+        '''
+        base_steps = self.base.calculate_steps(base_d)
+        shoulder_steps = self.shoulder.calculate_steps(shoulder_d)
+        elbow_steps = self.elbow.calculate_steps(elbow_d)
+        wrist_steps = self.wrist.calculate_steps(wrist_d)
+        return (base_steps, shoulder_steps, elbow_steps, wrist_steps)
 
-    def calibrate(self):
-        pass
+
+    def update_position(self, new_position):
+        '''
+        Updates the current position of the stepper motors. The position object 
+        contains the current step position of each motor.
+        '''
+        base = self.base.get_position()
+        shoulder = self.shoulder.get_position()
+        elbow = self.elbow.get_position()
+        wrist = self.wrist.get_position()
+        grip = self.grip.get_position()
+        self.position = (base, shoulder, elbow, wrist, grip)
+        
+

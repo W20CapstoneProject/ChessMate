@@ -2,15 +2,25 @@ class MoveManager:
     '''
     Store all available commands in one class. Can be instatiated instead of the individual classes for use
     '''
-    def __init__(self):
-        self.move = Move()
-        self.kill = Kill()
-        self.enPassant = enPassant()
-        self.castling = Castling()
-        self.promotion = Promotion()
+    def get_move(self, piece, start, end):
+        return _Move(piece, start, end)
+
+    def get_kill(self, piece, start, end):
+        return _Kill(piece, start, end)
+
+    def get_enPassant(self, piece, start, end):
+        return _enPassant(piece, start, end)
+
+    def get_castling(self, piece, start, end):
+        return _Castling(piece, start, end)
+
+    def get_promotion(self, piece, start, end):
+        return _Promotion(piece, start, end)
 
 
-class Move:
+
+
+class _Move:
     '''
     Utilize polymorphism to hand off command creation to move class.
 
@@ -22,18 +32,18 @@ class Move:
         self.end = end
         self.piece = piece
 
-    def get_commands(self, handler):
+    def create_commands(self, handler):
         # Regular Move: Can be completed with two commands (not including reverse)
         commands = []
-        commands.append(handler(self.start))
+        commands.append(handler.create(self.start))
         # Todo: intermediary: origin.
-        commands.append(handler(self.end))
+        commands.append(handler.create(self.end))
         # Todo: intermediary: origin.
         return commands
 
 
 
-class Kill(Move):
+class _Kill(_Move):
 # Kill Move
 # Remove piece at end, and move our piece to end
 # Can be done in 4 commands
@@ -41,14 +51,14 @@ class Kill(Move):
 
 
 
-class enPassant(Move):
+class _enPassant(_Move):
 # enPassant Move
 #need more information to determine what pawn to capture
     pass
 
 
 
-class Castling(Move):
+class _Castling(_Move):
 # if square number is increaing from start to end then
 # castle kingside, otherwise queenside. The rook will be
 # on the right most or left most square of a row.
@@ -57,7 +67,7 @@ class Castling(Move):
 
 
 
-class Promotion(Move):
+class _Promotion(_Move):
 # Not sure how this case is handled. Just execute command for now.
     pass
 
