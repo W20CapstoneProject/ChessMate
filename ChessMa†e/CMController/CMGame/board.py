@@ -11,22 +11,13 @@ class GameBoard:
     '''
 
     def __init__(self):
-        self.CONFIG = configparser.ConfigParser()
-        self.CONFIG_FILE = 'config.ini'
-        self.configure()
-
-    def configure(self):
-        '''
-        Use to read in latest config file
-        '''
-        self.CONFIG.read('config.ini')
-        self.SQUARE_LENGTH = int(self.CONFIG['BOARD']['square_length'])
-        self.SQUARE_WIDTH= int(self.CONFIG['BOARD']['square_width'])
-        self.BORDER_WIDTH = int(self.CONFIG['BOARD']['border_width'])
-        self.BASE_LENGTH = int(self.CONFIG['BOARD']['base_length'])
-        self.X_BIAS = int(self.CONFIG['BOARD']['x_bias'])
-        self.Y_BIAS = int(self.CONFIG['BOARD']['y_bias'])
-        self.Z_BIAS = int(self.CONFIG['BOARD']['z_bias'])
+        self.SQUARE_LENGTH = 60.452
+        self.SQUARE_WIDTH= 60.452
+        self.BORDER_WIDTH = 20.0
+        self.BASE_LENGTH = 180.0
+        self.X_BIAS = 0
+        self.Y_BIAS = 0
+        self.Z_BIAS = 0
 
 
     def get_coordinate_x(self, index):
@@ -95,14 +86,6 @@ class BoardMapping:
         Plot all squares on the board with their corrseponding coordinate.
 
         March 2, 2020: Needs to be implemented still. Only used to verify coordinate map.
-        '''
-        '''
-        label = "{:.2f}".format(y)
-        plt.annotate(label, # this is the text
-                 (x,y), # this is the point to label
-                 textcoords="offset points", # how to position the text
-                 xytext=(0,10), # distance from text to points (x,y)
-                 ha='center') # horizontal alignment can be left, right or center
         '''
         xs = list()
         ys = list()

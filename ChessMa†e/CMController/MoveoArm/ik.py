@@ -10,7 +10,6 @@ class InverseKinematics:
 
     This class calculates the required steps for the robotic action using inverse kinematics.
     '''
-
     def __init__(self):
         self.arm = moveo_arm.MoveoArm()
         self.l1 = self.arm.bone_1
@@ -45,9 +44,13 @@ class InverseKinematics:
         '''
         x3 = x-self.l3*cos(phi)
         y3 = y-self.l3*sin(phi)
-        o1,o2 = self.solve2R(x3, y3)
+        o1,o2 = self.solve_2R(x3, y3)
         o3 = phi - o1 - o2
         return [o1, o2, o3]
+
+
+    def jacobian(selff):
+        pass
 
 
 class IKMapping:
@@ -56,6 +59,7 @@ class IKMapping:
     '''
     def __init__(self):
         self.ik_engine = InverseKinematics()
+
 
     def plot_xy(self, n, m):
         ik = InverseKinematics()
@@ -79,6 +83,7 @@ class IKMapping:
                         ys.append(y)
         pyplot.scatter(ys,xs)
         pyplot.show()
+    
     
     def show_arm(self, o1, o2, o3, polar=False):
         x1 = self.ik_engine.l1*cos(o1)
