@@ -4,13 +4,15 @@ Unit test suite for CMController actions.
 
 March 2, 2020: Need to write accurate unit test cases for the CMController class.
 '''
-
+import sys
 import unittest
 from cm import CMController
-from board import GameBoard, BoardMapping
-import cm_move
-from cm_command import CMCommand
-from MoveoArm import moveo_arm, ik
+from CMGame.board import GameBoard, BoardMapping
+from CMGame.move import Move
+from MoveoArm.command import Command
+from MoveoArm.ik import InverseKinematics
+from MoveoArm.moveo_arm import MoveoArm
+from CMGame.piece import PieceManager
 
 
 class TestCMController(unittest.TestCase):
@@ -18,7 +20,7 @@ class TestCMController(unittest.TestCase):
     def setUp(self):
         self.board = GameBoard()
         self.cm = CMController()
-        self.cm_command = CMCommand()
+        self.cm_command = Command(self.board)
 
     def get_coordinate(self):
         board_map = []
@@ -32,7 +34,9 @@ class TestCMController(unittest.TestCase):
 
 
     def test_execute_moves(self):
-        move = cm_move.Move(1, 2)
+        pm = PieceManager()
+        pawn = pm.pawn
+        move = Move(piece = pawn, start = 1, end = 2)
         commands = self.cm.execute_move(move)
 
 
@@ -43,7 +47,7 @@ class TestCMController(unittest.TestCase):
 
 class TestMoveoArm(unittest.TestCase):
     def setUp(self):
-        self.arm = moveo_arm.MoveoArm()
+        self.arm = MoveoArm()
         self.show_joints()
 
     def show_joints(self):
@@ -64,7 +68,7 @@ class TestMoveoArm(unittest.TestCase):
 
 class TestIK(unittest.TestCase):
     def setUp(self):
-        self.ik = ik.InverseKinematics()
+        self.ik = InverseKinematics()
 
 
     def mapIK(self):

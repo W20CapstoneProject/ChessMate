@@ -1,6 +1,6 @@
 import keyboard
 
-class Calibrate:
+class MoveoCalibrate:
     '''
     Calibrate
 

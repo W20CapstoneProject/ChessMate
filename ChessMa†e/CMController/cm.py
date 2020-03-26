@@ -3,13 +3,12 @@ import configparser
 import re
 import glob
 import math
-from board import GameBoard
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cm_command import CMCommand
-from MoveoArm import moveo_arm
+from CMGame import board, piece, move
+from MoveoArm import moveo_arm, command, ik
 
 
 class CMController:
@@ -29,9 +28,9 @@ class CMController:
     def __init__(self):
         self.device = serial.Serial()
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
-        self.board = GameBoard()
-        self.command_handler = CMCommand()
+        self.config.read('_config_.ini')
+        self.board = board.GameBoard()
+        self.command_handler = command.Command(self.board)
         self.log = logging.basicConfig(filename=self.config['CM']['error_log'],level=logging.ERROR)
 
 
@@ -63,9 +62,9 @@ class CMController:
         return False
 
 
-    def send_command(self, cmd):
+    def send_instruction(self, cmd):
         '''
-        Send the decoded command to the connected device.
+        Send the instruction to the connected device.
         March 2, 2020: Not tested yet. Needs to be finalized still.
         '''
         self.device.reset_input_buffer()
@@ -90,6 +89,12 @@ class CMController:
         '''
         Main program call to chain all commands together based off of one given move
         Returns success boolean when move is completed.
+        Procedure
+        1. Receive a Move() from the ChessMate program.
+        2. Generate commands list from the Move() object.
+        3. Ensure that the commands are feasible for the Moveo Arm.
+        4. Send the command to the Moveo Arm via the serial lines.
+        5. Wait for ACK then continue sending commands until the move it completed.
 
         Moves - array of moves that need to be executed in order for the chess action
         March 2, 2020: Needs to be implemented still.
@@ -98,8 +103,8 @@ class CMController:
             if (self.is_connected()):
                 print('Executing command')
                 for move in moves:
-                    print(move)
                     cmds = move.get_commands(self.command_handler)
+                    # Not sure here
                     arm.send_command()
         except:
             self.log.error("Could not execute command.")

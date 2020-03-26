@@ -35,5 +35,7 @@ while True:
     if (command == "done"):
         cm_controller.device.close()
         sys.exit(0)
+    else: 
+        #switch statement her for now for each type of instruction
 
     cm_controller.send_command(command)

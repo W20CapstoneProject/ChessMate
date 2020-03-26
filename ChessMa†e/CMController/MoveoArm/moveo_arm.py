@@ -17,16 +17,17 @@ class MoveoArm:
         self.bone_1 = 220
         self.bone_2 = 220
         self.bone_3 = 95
-        self.base = BaseJoint(constraint=30)
-        self.shoulder = ShoulderJoint(constraint=30)
-        self.elbow = ElbowJoint(constraint=30)
-        self.wrist = WristJoint(constraint=30)
-        self.grip = GripJoint(constraint=30)
-
+        self.base = BaseJoint()
+        self.shoulder = ShoulderJoint()
+        self.elbow = ElbowJoint()
+        self.wrist = WristJoint()
+        self.grip = GripJoint()
 
     def check_constraints(self, steps):
         '''
         Check constraints for each joint and return the allowed steps.
+
+        Move to dictionary format for issuing steps.
         '''
         base = self.base.issue_steps(steps[0])
         shoulder = self.shoulder.issue_steps(steps[1])
@@ -35,5 +36,11 @@ class MoveoArm:
         grip = self.grip.issue_steps(steps[4])
         return (base, shoulder, elbow, wrist, grip)
 
+    def calculate_steps(self, degrees):
+        pass
+
     def update_position(self):
+        pass
+
+    def calibrate(self):
         pass

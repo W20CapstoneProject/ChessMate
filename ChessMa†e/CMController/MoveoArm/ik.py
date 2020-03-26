@@ -45,9 +45,13 @@ class InverseKinematics:
         '''
         x3 = x-self.l3*cos(phi)
         y3 = y-self.l3*sin(phi)
-        o1,o2 = self.solve2R(x3, y3)
+        o1,o2 = self.solve_2R(x3, y3)
         o3 = phi - o1 - o2
         return [o1, o2, o3]
+
+
+    def jacobian(selff):
+        pass
 
 
 class IKMapping:
