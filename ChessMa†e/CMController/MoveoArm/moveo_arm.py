@@ -3,7 +3,7 @@ from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
 import matplotlib.pyplot as pyplot
 import configparser
 import serial
-from .joint import BaseJoint, ShoulderJoint, ElbowJoint, WristJoint, GripJoint
+from joint import BaseJoint, ShoulderJoint, ElbowJoint, WristJoint, GripJoint
 
 
 class MoveoArm:

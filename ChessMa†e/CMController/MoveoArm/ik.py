@@ -2,7 +2,7 @@ from numpy import radians, degrees
 from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
 import matplotlib.pyplot as pyplot
 import configparser
-from . import moveo_arm
+import moveo_arm
 
 class InverseKinematics:
     '''
@@ -45,7 +45,7 @@ class InverseKinematics:
         '''
         x3 = x-self.l3*cos(phi)
         y3 = y-self.l3*sin(phi)
-        o1,o2 = self.solve2R(x3, y3)
+        o1,o2 = self.solve_2R(x3, y3)
         o3 = phi - o1 - o2
         return [o1, o2, o3]
 
