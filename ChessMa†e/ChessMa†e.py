@@ -3,10 +3,10 @@
 #*                                                                             *
 #*                                  ChessMa†e                                  *
 #*                                 –––––––––––                                 *
-#* Damian Douziech                                                             *
-#* Feb. 1, 2020                                                                *
+#*  DMD, 2020                                                                  *
 #*                                                                             *
-#* Abstract:
+#*                                                                             *
+#*  Abstract:
 #*
 #*
 #*
@@ -41,10 +41,19 @@ WHITE = True
 BLACK = False
 
 FEN_userWhite = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"  # The default, initial board-state FEN
-FEN_userBlack = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr"  # Non-standard, board-state FEN - only suitable to this program for initially determining the user's colour
+FEN_userBlack = "RNBKQBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr"  # Non-standard, board-state FEN - only suitable to this program for initially determining the user's colour
 
 boardSetUpError = -1
 
+class move:
+     def __init__(self, end, start, isRegularMove, isKill, enPassant, isCastling, isPromotion):
+         self.isRegularMove = isRegularMove
+         self.end = end
+         self.start = start
+         self.isKill = isKill
+         self.enPassant = enPassant
+         self.isCastling = isCastling
+         self.isPromotion = isPromotion
 
 
 
@@ -228,9 +237,12 @@ def userMode(engine, engineGameBoard, currentPhysicalStateDictionary, perspectiv
          print("engineGameBoard.fen(): \n", engineGameBoard.fen())
          print()
 
-         #DECLARE IF THE COMPUTER HAPPENS TO BE IN CHECK
+         #DECLARE IF THE COMPUTER HAPPENS TO BE IN CHECK OR CHECKMATE
          if engineGameBoard.is_check():
-             print("The black king is in check!")
+             if perspective == 1:
+                 print("The black king is in check!")
+            else:
+                print("The white king is in check!")
 
          turn = BLACK
 
@@ -257,6 +269,7 @@ def robotMode(engine, engineGameBoard, currentPhysicalStateDictionary, perspecti
     print(engineGameBoard)
 
     # engine/arm executes the move...
+    # Move converted from UCI to physical board locations ('to' and 'from')
     # confirmation = CM_controller(engineMove)  # CM_controller --> Merlin --> Arm; Merlin --> CM_controller --> chessMa†e
     # Error handling should be delineated within the CM_controller.
 
@@ -269,8 +282,9 @@ def robotMode(engine, engineGameBoard, currentPhysicalStateDictionary, perspecti
     previousPhysicalStateDictionary = currentPhysicalStateDictionary
     currentPhysicalStateDictionary = generatePhysicalBoardStateDictionary(transmissionArray_2D_sampleMove)
 
-    userMove = findLastMove(currentPhysicalStateDictionary, previousPhysicalStateDictionary)
+    Move = findLastMove(currentPhysicalStateDictionary, previousPhysicalStateDictionary)
 
+    # check if proposed move matches the actual move made
 
 
     previousGameStateFEN = engineGameBoard.fen() #Store the previous gameState
@@ -301,7 +315,7 @@ def battleMode(engine, engineGameBoard, currentPhysicalStateDictionary, turn, pe
 # def fenToboardState(FEN):
 #
 #
-# 
+#
 
 
 
