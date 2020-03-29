@@ -2,6 +2,7 @@ from numpy import radians, degrees
 from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
 import matplotlib.pyplot as pyplot
 import configparser
+
 from CMController.MoveoArm.moveo_arm import MoveoArm
 
 class InverseKinematics:
