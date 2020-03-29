@@ -5,7 +5,7 @@ Use to send instructions to the Merlin via serial connection.
 March 2, 2020: Still need to finishing implementing sending serial commands.
 '''
 
-from cmc import CMController
+from CMController.cmc import CMController
 import re
 import subprocess
 import sys

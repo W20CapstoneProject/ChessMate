@@ -2,7 +2,8 @@ from numpy import radians, degrees
 from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
 import matplotlib.pyplot as pyplot
 import configparser
-import moveo_arm
+
+from CMController.MoveoArm.moveo_arm import MoveoArm
 
 class InverseKinematics:
     '''
@@ -11,7 +12,7 @@ class InverseKinematics:
     This class calculates the required steps for the robotic action using inverse kinematics.
     '''
     def __init__(self):
-        self.arm = moveo_arm.MoveoArm()
+        self.arm = MoveoArm()
         self.l1 = self.arm.bone_1
         self.l2 = self.arm.bone_2
         self.l3 = self.arm.bone_3
