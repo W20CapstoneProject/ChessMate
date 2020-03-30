@@ -133,7 +133,7 @@ void loop() {
         //Move arm back to origin so it can execute it's next move
         // arm_steppers.moveTo(origin);
         // arm_steppers.runSpeedToPosition();
-        for(int i=0; i <= 3; ++i){
+        for(int i=0; i < NEW_MOVE_SIZE; ++i){
           previous_move[i] = new_move[i];
         }
     }

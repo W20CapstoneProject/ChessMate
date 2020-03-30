@@ -50,7 +50,7 @@ class InverseKinematics:
         return [o1, o2, o3]
 
 
-    def jacobian(selff):
+    def jacobian(self):
         pass
 
 
@@ -78,7 +78,7 @@ class IKMapping:
         for o1 in x1:
             for o2 in x2:
                 for o3 in x3:
-                    x,y,phi = self.ik_engine.forward(o1,o2,o3)
+                    x,y,phi = self.ik_engine.solve_forward(o1,o2,o3)
                     if((x>0) and (y>0)):
                         xs.append(x)
                         ys.append(y)

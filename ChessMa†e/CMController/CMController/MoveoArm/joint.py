@@ -18,8 +18,11 @@ class Joint:
         return self.constraint
 
 
+    def get_position(self):
+        return self.step_position
+    
     def set_position(self, position):
-        self.position = position
+        self.step_position = position
 
 
     def check_constraint(self, steps):
@@ -66,7 +69,7 @@ class Shoulder(Joint):
 
 class Elbow(Joint):
 # Elbow joint of Moveo arm.
-    def __init__(self, constraint = 200, position = 0, gear_ratio = 1.0):
+    def __init__(self, constraint = 200, position = 0, gear_ratio = 21.7):
         super().__init__(constraint, position, gear_ratio)
    
 

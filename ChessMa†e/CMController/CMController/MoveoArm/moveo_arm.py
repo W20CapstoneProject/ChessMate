@@ -1,5 +1,15 @@
 from CMController.MoveoArm.joint import Base, Shoulder, Elbow, Wrist, Grip
 
+# Approximate arm dimensions:
+#     - Shoulder Bone length = 220mm
+#     - Elbow Bone length = 220mm
+#     - Wrist Bone length = 95mm
+#     - Gripper length = 70mm
+#    
+#     - Base radius = 80mm
+#     - Shoulder radius = 60mm
+#     - Elbow radius = 48mm
+#     - Wrist radius = 35mm
 
 class MoveoArm:
     '''
