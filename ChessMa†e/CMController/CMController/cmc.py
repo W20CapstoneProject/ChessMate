@@ -24,7 +24,7 @@ class CMController:
         self.device = serial.Serial()
         self.config = configparser.ConfigParser()
         self.config.read('_config_.ini')
-        self.log = logging.basicConfig(filename=self.config['CM']['error_log'],level=logging.ERROR)
+        #self.log = logging.basicConfig(filename=self.config['CM']['error_log'],level=logging.ERROR)
 
 
     def connect(self, port = None ):

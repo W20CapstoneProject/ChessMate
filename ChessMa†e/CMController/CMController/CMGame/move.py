@@ -35,9 +35,9 @@ class _Move:
     def create_commands(self, handler):
         # Regular Move: Can be completed with two commands (not including reverse)
         commands = []
-        commands.append(handler.create(self.start))
+        commands.append(handler.create(self.piece, self.start))
         # Todo: intermediary: origin.
-        commands.append(handler.create(self.end))
+        commands.append(handler.create(self.piece, self.end))
         # Todo: intermediary: origin.
         return commands
 

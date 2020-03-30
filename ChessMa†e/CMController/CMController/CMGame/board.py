@@ -49,24 +49,24 @@ class GameBoard:
         return y + self.Y_BIAS
 
 
-    def get_coordinate_z(self):
+    def get_coordinate_z(self, piece_height):
         '''
         Call to calculate the z coordinate of the chess board square.
 
         March 2, 2020: Not verfied yet. Need to test with Merlin program. Need to get accurate board dimensions.
         '''
-        z = 0
+        z = piece_height
         return z + self.Z_BIAS
 
 
-    def get_coordinates(self, square_number):
+    def get_coordinates(self, square_number, piece):
         '''
         Call to receive a coordinate command from the square number.
         March 2, 2020: Will work once the sub routines are verified. Also might need to change call pattern.
         '''
         x = self.get_coordinate_x(square_number)
         y = self.get_coordinate_y(square_number)
-        z = self.get_coordinate_z()
+        z = self.get_coordinate_z(piece.get_height())
         return (x, y, z)
 
 

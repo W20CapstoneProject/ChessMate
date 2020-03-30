@@ -1,9 +1,9 @@
-from cmc import CMController 
-from CMGame.interface import CMGameInterface
-from MoveoArm.interface import MoveoInterface
+from CMController.cmc import CMController 
+from CMController.CMGame.interface import CMGameInterface
+from CMController.MoveoArm.interface import MoveoInterface
 
 
-class CMMoveo:
+class CMIntegration:
     '''
     This class serves as the ChessMate software and Moveo/Merlin integration program. It contains the three methods required for communication
     between the two.
@@ -44,28 +44,25 @@ class CMMoveo:
         4. Send the command to the Moveo Arm via the serial lines.
         5. Wait for ACK then continue sending commands until the move is completed.
         ---
-
-        Moves - array of moves that need to be executed in order for the chess action
         March 2, 2020: Needs to be implemented still.
         '''
         success = "OK!"
         if (self.cmc.is_connected()):
             cmds = move.create_commands(self.command_handler)
-            #TODO: Fix to actually verify commands
-            self.moveo_interface.verify_commands((0, 0, 0, 0, 0))
-            
-            for cmd in cmds:
-                print("cmd: " + str(cmd))
-                serialized = str(cmd)
-                response = self.cmc.send_command(serialized)
-                print(response)
-                if (response == success):
-                    self.cmd_history.append()
-                else: 
-                    raise Exception ("Merlin", "Merlin failed to execute command")  
+            cmds_are_allowed = self.moveo_interface.is_within_constraints(cmds)
+            if (cmds_are_allowed is True):
+                for cmd in cmds:
+                    serialized = self.moveo_interface.serialize_command(cmd)
+                    print(serialized)
+                    response = self.cmc.send_command(serialized)
+                    print(response)
+                    if (response == success):
+                        self.cmd_history.append()
+                    else: 
+                        raise Exception ("Merlin", "Merlin failed to execute command")  
 
-            print('Done.')
-            return True
+                print('Done.')
+                return True
 
         else:
             print("Controller is not connected to Merlin firmwware. Attempting to connect now.")
@@ -87,7 +84,7 @@ class CommandHandler:
         self.platform = CMGameInterface().get_board_manager()
 
 
-    def create(self, index):
+    def create(self, piece, square_index):
         '''
         Used to create the individual commands for the Merlin system.
 
@@ -95,7 +92,8 @@ class CommandHandler:
         2. Use inverse kinematics to determine the required joint rotations.
         3. Convert joint rotations angles to steps.
         '''
-        coordinates = self.platform.get_coordinates(index)
+        coordinates = self.platform.get_coordinates(square_index, piece)
+        # TODO: Get Inverse takes phi as 3rd argument not z, how do I calculate phi?
         degrees = self.moveo_interface.get_inverse(coordinates[0], coordinates[1], coordinates[2])
         steps = self.moveo_interface.get_steps_from_degrees(degrees[0], degrees[1], degrees[2], 0)
         return steps

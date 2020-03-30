@@ -1,6 +1,6 @@
-from .board import GameBoard
-from .move import MoveManager
-from .piece import PieceManager
+from CMController.CMGame.board import GameBoard
+from CMController.CMGame.move import MoveManager
+from CMController.CMGame.piece import PieceManager
 
 
 class CMGameInterface:
