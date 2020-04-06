@@ -20,6 +20,16 @@ class GameBoard:
         self.Z_BIAS = 0
 
 
+    def add_z_bias(self, increment):
+        self.Z_BIAS = self.Z_BIAS + increment
+
+    def add_y_bias(self, increment):
+        self.Y_BIAS = self.Y_BIAS + increment
+
+    def add_x_bias(self, increment):
+        self.X_BIAS = self.X_BIAS + increment
+
+
     def get_coordinate_x(self, index):
         '''
         Call to calculate the x coordinate of the chess board square.

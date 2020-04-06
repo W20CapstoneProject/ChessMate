@@ -13,17 +13,25 @@ class CMController:
     CMController
     Used to interpret ChessMate based commands into coordinate commands for the Moveo Arm.
 
-
     Commands are 3 digit step commands for the following sequence of motors
     base shoulder elbow wrist grip
 
+    Todo:
+    - Verify send_command() is compatible with Merlin protocols.
+
     March 2, 2020: The main move execution command still needs to be completed. Also requires better unit testing to ensure the correct coordinate mapping and move consumption. Will be updating this code for the IO demonstration to work with the Merlin control program.
     '''
+    port = "/dev/tty.usbmodemFD141"
+    baudrate = 9600
+    timeout = 5
+    ack_code = 'ACK'
+    success_code = 'OK!'
+    code_size = 3
 
     def __init__(self):
         self.device = serial.Serial()
-        self.config = configparser.ConfigParser()
-        self.config.read('_config_.ini')
+        #self.config = configparser.ConfigParser()
+        #self.config.read('_config_.ini')
         #self.log = logging.basicConfig(filename=self.config['CM']['error_log'],level=logging.ERROR)
 
 
@@ -33,14 +41,14 @@ class CMController:
         March 2, 2020: Tested and working for general demo program.
         '''
         if port is None:
-            port = self.config['DEVICE']['port']
+            port = self.port
 
-        self.device.baudrate = self.config['DEVICE']['baudrate']
-        self.device.timeout = int(self.config['DEVICE']['timeout'])
+        self.device.baudrate = self.baudrate
+        self.device.timeout = self.timeout
         self.device.port = port
         try:
             self.device.open()
-            print("Connected to ->" + port + "\n")
+            print("Connected to :: " + port + "\n")
         except:
             print("\nCould not connect to device.")
 
@@ -63,10 +71,10 @@ class CMController:
         self.device.reset_input_buffer()
         self.device.reset_output_buffer()
         tx = self.device.write(cmd.encode())
-        ack = self.device.read(3).decode()
-        print(ack)
-        complete = self.device.read(3).decode()
-        print(complete)
+        ack = self.device.read(self.code_size).decode()
+        print("ACK: " + ack)
+        complete = self.device.read(self.code_size).decode()
+        print("Complete: " + complete)
         return complete
 
 
