@@ -91,11 +91,12 @@ void poll_for_new_coords(double (&move)[NEW_MOVE_SIZE]){
     size_t data_len;
     char * buff;
     char * tokenized_buff;
+    int coord_buff_size = (4*(NEW_MOVE_SIZE+1))+5 //NEW_MOVE_SIZE number of comma seperated values of length 4.
     int i = 0;
 
     while(!Serial.available()){}
     //Once we receive data
-    data_len = Serial.readBytes(buff, (4*(NEW_MOVE_SIZE+1))); 
+    data_len = Serial.readBytes(buff, coord_buff_size); // expects something like "1000,0200,0030,0004,0050,0000"
     tokenized_buff = strtok(buff,",");
     while(tokenized_buff != NULL){
       move[i] = strtod(tokenized_buff, NULL);
