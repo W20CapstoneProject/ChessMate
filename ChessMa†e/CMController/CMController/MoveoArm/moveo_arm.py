@@ -37,32 +37,34 @@ class MoveoArm:
 
         Move to dictionary format for issuing steps.
         '''
-        base = self.base.check_constraint(base_steps)
-        shoulder = self.shoulder.check_constraint(shoulder_steps)
-        elbow = self.elbow.check_constraint(elbow_steps)
-        wrist = self.wrist.check_constraint(wrist_steps)
+        base = self.base.check_constraints(base_steps)
+        shoulder = self.shoulder.check_constraints(shoulder_steps)
+        elbow = self.elbow.check_constraints(elbow_steps)
+        wrist = self.wrist.check_constraints(wrist_steps)
         return (base, shoulder, elbow, wrist)
 
-    def is_steps_allowed(self, steps):
-        responses = self.check_constraints(steps[0], steps[1], steps[2], steps[3])
+    def verify_steps(self, base, shoulder, elbow, wrist):
+        ''' Determines if the steps given will fall within the max and min constraints of the arm.'''
+        responses = self.check_constraints(base, shoulder, elbow, wrist)
         for response in responses:
             if (response is False):
                 return False
         return True
 
 
-    def calculate_steps(self, base_d, shoulder_d, elbow_d, wrist_d):
+    def calculate_steps(self, base_d, shoulder_d, elbow_d, wrist_d, grip_d):
         '''
         Given the desired degrees for rotation, calculate the steps for each motor.
         This function assumes that the current position of the joints are all at zero/origin.
 
-        Returns steps for each controlled joint
+        Returns - steps for each controlled joint
         '''
         base_steps = round(self.base.calculate_steps(base_d), self.precision)
         shoulder_steps = round(self.shoulder.calculate_steps(shoulder_d), self.precision)
         elbow_steps = round(self.elbow.calculate_steps(elbow_d), self.precision)
         wrist_steps = round(self.wrist.calculate_steps(wrist_d), self.precision)
-        return (base_steps, shoulder_steps, elbow_steps, wrist_steps)
+        grip_steps = round(self.grip.calculate_steps(grip_d), self.precision)
+        return (base_steps, shoulder_steps, elbow_steps, wrist_steps, grip_steps)
 
 
     def update_position(self, new_position):

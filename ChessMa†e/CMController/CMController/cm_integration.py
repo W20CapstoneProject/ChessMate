@@ -15,6 +15,8 @@ class CMIntegration:
 
     When the game is over ChessMate will call end() as a destructor for this class.
     '''
+    success_code = "OK!"
+    ack_code = "ACK"
 
     def __init__(self):
         self.cmc = CMController()
@@ -29,6 +31,10 @@ class CMIntegration:
         '''
         self.cmc.connect()
         return self.cmc.is_connected()
+
+    def test(self):
+        ''' Exectue a dummy command. '''
+        self.cmc.send_command("0000,0000,0000,0000,0000") # Demo doesn't work without a failed serial command to start.
 
     
     def execute_move(self, move):
@@ -46,23 +52,26 @@ class CMIntegration:
         ---
         March 2, 2020: Needs to be implemented still.
         '''
-        success = "OK!"
-        if (self.cmc.is_connected()):
+        is_alive = self.cmc.is_connected()
+
+        if (is_alive == True):
             cmds = move.create_commands(self.command_handler)
             cmds_are_allowed = self.moveo_interface.is_within_constraints(cmds)
             if (cmds_are_allowed is True):
                 for cmd in cmds:
                     serialized = self.moveo_interface.serialize_command(cmd)
-                    print(serialized)
+                    print("\nSerialized instructions: " + str(serialized))
                     response = self.cmc.send_command(serialized)
                     print(response)
-                    if (response == success):
-                        self.cmd_history.append()
+                    if (response == self.success_code):
+                        self.cmd_history.append(cmd)
                     else: 
-                        raise Exception ("Merlin", "Merlin failed to execute command")  
+                        raise Exception ("Communication Error", "Merlin failed to execute command")  
 
                 print('Done.')
                 return True
+            else:
+                print("Command sequence does not fit within constraints.")
 
         else:
             print("Controller is not connected to Merlin firmwware. Attempting to connect now.")
@@ -77,7 +86,7 @@ class CMIntegration:
 
 class CommandHandler:
     '''
-    Contains method for converting moves into commands.
+    Contains method for converting moves into step commands.
     '''
     def __init__(self):
         self.moveo_interface = MoveoInterface()
@@ -92,8 +101,10 @@ class CommandHandler:
         2. Use inverse kinematics to determine the required joint rotations.
         3. Convert joint rotations angles to steps.
         '''
-        coordinates = self.platform.get_coordinates(square_index, piece)
-        # TODO: Get Inverse takes phi as 3rd argument not z, how do I calculate phi?
-        degrees = self.moveo_interface.get_inverse(coordinates[0], coordinates[1], coordinates[2])
-        steps = self.moveo_interface.get_steps_from_degrees(degrees[0], degrees[1], degrees[2], 0)
+        coord = self.platform.get_coordinates(square_index, piece)
+        base, shoulder, elbow, wrist, grip = self.moveo_interface.get_degrees_from_coordinates(coord[0], coord[1], coord[2])
+        steps = self.moveo_interface.get_steps_from_degrees(base, shoulder, elbow, wrist, grip)
+        print("Coordinates: " + str(coord))
+        print("Degrees (base, shoulder, elbow, wrist): " + str((base, shoulder, elbow, wrist, grip)))
+        print("Steps: " + str(steps))
         return steps

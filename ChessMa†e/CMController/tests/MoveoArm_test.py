@@ -9,7 +9,7 @@ import unittest
 from CMController.MoveoArm.moveo_arm import MoveoArm
 from CMController.MoveoArm.instruction import InstructionManager
 from CMController.MoveoArm.ik import InverseKinematics
-from CMController.MoveoArm.joint import Joint
+from CMController.MoveoArm import joint
 
 
 class TestMoveoArm(unittest.TestCase):
@@ -17,8 +17,8 @@ class TestMoveoArm(unittest.TestCase):
         self.arm = MoveoArm()
 
     def test_check_constraints(self):
-        steps1 = (20, 20, 20, 20, 20)
-        steps2 = (350, 350, 350, 350, 350)
+        steps1 = (20, 20, 20, 20)
+        steps2 = (350, 350, 3000, 350)
         constraints1 = self.arm.check_constraints(steps1[0], steps1[1], steps1[2], steps1[3])
         constraints2 = self.arm.check_constraints(steps2[0], steps2[1], steps2[2], steps2[3])
         self.assertEqual(constraints1, (True, True, True, True))
@@ -62,12 +62,20 @@ class TestIK(unittest.TestCase):
 
 class TestJoints(unittest.TestCase):
     def setUp(self):
-        self.joint = Joint(constraint=200, position=0, gear_ratio=1.0)
+        self.joint = joint.Joint(max_constraint=45, min_constraint=-45, gear_ratio=1.0)
+        self.base = joint.Base()
+        self.shoulder = joint.Shoulder()
+        self.elbow = joint.Elbow()
+        self.roll = joint.Roll()
+        self.wrist = joint.Wrist()
+        self.grip = joint.Grip()
 
     def test_joint(self):
-        self.assertEqual(self.joint.get_constraint(), 200)
-        self.assertFalse(self.joint.check_constraint(350))
-        self.assertTrue(self.joint.check_constraint(199))
+        self.assertEqual(self.joint.get_max_constraint(), 45)
+        self.assertFalse(self.joint.check_constraints(350))
+        self.assertTrue(self.joint.check_constraints(45))
+        self.assertTrue(self.joint.check_constraints(-45))
+        self.assertTrue(self.joint.check_constraints(0))
         self.assertEqual(self.joint.calculate_steps(45), 50)
 
 

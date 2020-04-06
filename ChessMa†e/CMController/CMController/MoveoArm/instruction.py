@@ -21,12 +21,24 @@ class InstructionManager():
         return wi.create(steps) 
 
 
+class MerlinInstruction():
+    depth = 4
+
+    def create(self, base, shoulder, elbow, wrist, grip):
+        base = str(base).zfill(self.depth)
+        shoulder = str(shoulder).zfill(self.depth)
+        elbow = str(elbow).zfill(self.depth)
+        wrist = str(wrist).zfill(self.depth)
+        grip = str(grip).zfill(self.depth)
+        return "{0},{1},{2},{3},{4}\n".format(base, shoulder, elbow, wrist, grip)
+
+
 class MoveInstruction():
     def __init__(self):
         self.instruction = "move"
 
     def create(self, base, shoulder, elbow, wrist, grip):
-        return "{0} ({1}, {2}, {3}, {4}, {5})\n".format(self.instruction, base, shoulder, elbow, wrist, grip)
+        return "{0} ({1}, {2}, {3}, {4}, {5})".format(self.instruction, base, shoulder, elbow, wrist, grip)
 
 
 class _Instruction():

@@ -1,7 +1,6 @@
 from numpy import radians, degrees
 from math import sin, cos, tan, asin, acos, atan, atan2, sqrt
 import matplotlib.pyplot as pyplot
-import configparser
 
 from CMController.MoveoArm.moveo_arm import MoveoArm
 
@@ -17,11 +16,13 @@ class InverseKinematics:
         self.l2 = self.arm.bone_2
         self.l3 = self.arm.bone_3
         self.sigma = 1
+        self.precision = 6
 
 
     def solve_forward(self, o1, o2, o3):
         '''
         Solve the forward kinematics equation.
+        Given the desired degrees of the joints, will return the x, y, and phi in free-space.
         '''
         x = self.l1*cos(o1) + self.l2*cos(o1+o2) + self.l3*cos(o1+o2+o3)
         y = self.l1*sin(o1) + self.l2*sin(o1+o2) + self.l3*sin(o1+o2+o3)
@@ -42,6 +43,9 @@ class InverseKinematics:
     def solve_inverse(self, x, y, phi):
         '''
         Solve the 3R inverse kinematics equation.
+        o3 - shoulder degrees
+        o2 - elbow degrees
+        o1 - wrist degrees 
         '''
         x3 = x-self.l3*cos(phi)
         y3 = y-self.l3*sin(phi)
@@ -49,9 +53,15 @@ class InverseKinematics:
         o3 = phi - o1 - o2
         return [o1, o2, o3]
 
+    def calculate_base(self, x, y):
+        ''' Calculate base degrees. '''
+        return round(atan(y/x), self.precision)
 
-    def jacobian(self):
-        pass
+    def calculate_phi(self, x, y, z):
+        ''' Calculate phi for use with inverse kinematics equation. '''
+        r =  sqrt(x*x + y*y + z*z)
+        phi = acos(z/r)
+        return phi
 
 
 class IKMapping:
