@@ -4,3 +4,5 @@
 #define NUM_STEPPERS 5
 #define STEP_ANGLE 1.8
 #define STEP_RATIO 0.5
+
+#define NEW_MOVE_SIZE 6

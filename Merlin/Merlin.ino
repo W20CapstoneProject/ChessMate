@@ -24,6 +24,10 @@
 #include <MultiStepper.h>
 #include <Servo.h>
 
+#include <stdio.h>      /* printf, NULL */
+#include <stdlib.h>     /* strtod */
+#include <string.h>     /* strtok */
+
 
 
 int stepPins[NUM_STEPPERS] = {stepPin_shoulder, stepPin_elbow, stepPin_wrist, stepPin_base, stepPin_roll};
@@ -39,7 +43,7 @@ AccelStepper stepper_roll(AccelStepper::DRIVER, stepPins[4], dirPins[4]);
 MultiStepper arm_steppers;
 
 Servo gripper;
-int NEW_MOVE_SIZE = 5;
+
 
 double new_move[NEW_MOVE_SIZE];
 double previous_move[NEW_MOVE_SIZE];
@@ -85,11 +89,19 @@ void poll_for_new_coords(double (&move)[NEW_MOVE_SIZE]){
     //Poll serial connection for a new command from the CMController
     //This process has not been fully designed yet.
     size_t data_len;
-    char buff[NEW_MOVE_SIZE];
+    char * buff;
+    char * tokenized_buff;
+    int i = 0;
 
     while(!Serial.available()){}
-    data_len = Serial.readBytes(buff, NEW_MOVE_SIZE);
-    //Interpret buff into move
+    //Once we receive data
+    data_len = Serial.readBytes(buff, (4*(NEW_MOVE_SIZE+1))); 
+    tokenized_buff = strtok(buff,",");
+    while(tokenized_buff != NULL){
+      move[i] = strtod(tokenized_buff, NULL);
+      tokenized_buff = strtok(NULL, ",");
+      i++;
+    }
 }
 
 void actuate_gripper (int decision) {
@@ -121,7 +133,7 @@ void loop() {
         long origin[NUM_STEPPERS] = {0, 0, 0, 0, 0};
         int gripper_instruction;        //open or close gripper
 
-        gripper_instruction = (int) new_move[NEW_MOVE_SIZE];
+        gripper_instruction = (int) new_move[NEW_MOVE_SIZE-1];
         //VARIABLE MANAGEMENT*******************************
 
         //execute the requested move
