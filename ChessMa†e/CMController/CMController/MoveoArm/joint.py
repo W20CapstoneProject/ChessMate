@@ -28,9 +28,12 @@ class Joint:
         return self.min_constraint
 
 
+    def get_position(self):
+        return self.step_position
+    
     def set_position(self, position):
-        ''' Returns the current position of the joint motor. '''
-        self.position = position
+        self.step_position = position
+
 
 
     def check_constraints(self, steps):
@@ -68,9 +71,15 @@ class Shoulder(Joint):
    
 
 class Elbow(Joint):
+<<<<<<< HEAD
     ''' Elbow stepper of Moveo arm. '''
     def __init__(self):
         super().__init__(max_constraint = 35, min_constraint = -35, gear_ratio = 20)
+=======
+# Elbow joint of Moveo arm.
+    def __init__(self, constraint = 200, position = 0, gear_ratio = 21.7):
+        super().__init__(constraint, position, gear_ratio)
+>>>>>>> master
    
 
 class Roll(Joint):

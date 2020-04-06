@@ -64,7 +64,6 @@ class InverseKinematics:
         return phi
 
 
-
 class IKMapping:
     '''
     Map out results from inverse kinematics.
@@ -89,7 +88,7 @@ class IKMapping:
         for o1 in x1:
             for o2 in x2:
                 for o3 in x3:
-                    x,y,phi = self.ik_engine.forward(o1,o2,o3)
+                    x,y,phi = self.ik_engine.solve_forward(o1,o2,o3)
                     if((x>0) and (y>0)):
                         xs.append(x)
                         ys.append(y)

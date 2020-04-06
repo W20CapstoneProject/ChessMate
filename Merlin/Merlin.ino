@@ -24,6 +24,10 @@
 #include <MultiStepper.h>
 #include <Servo.h>
 
+#include <stdio.h>      /* printf, NULL */
+#include <stdlib.h>     /* strtod */
+#include <string.h>     /* strtok */
+
 
 
 int stepPins[NUM_STEPPERS] = {stepPin_shoulder, stepPin_elbow, stepPin_wrist, stepPin_base, stepPin_roll};
@@ -39,10 +43,10 @@ AccelStepper stepper_roll(AccelStepper::DRIVER, stepPins[4], dirPins[4]);
 MultiStepper arm_steppers;
 
 Servo gripper;
-int NEW_MOVE_SIZE = 4;
 
-double new_move[4];
-double previous_move[5];
+
+double new_move[NEW_MOVE_SIZE];
+double previous_move[NEW_MOVE_SIZE];
 
 void setup(){
     Serial.begin(9600);
@@ -53,32 +57,6 @@ void setup(){
       pinMode(enPins[i], OUTPUT);   //enable/disable pin
       digitalWrite(enPins[i], LOW); //initially disable the motors
     }
-
-//    //Setup all the pins for the stepper drivers
-//    pinMode(stepPin_shoulder, OUTPUT); //step pulse pin
-//    pinMode(dirPin_shoulder, OUTPUT);  //rotional direction control pin
-//    pinMode(enPin_shoulder, OUTPUT);   //enable/disable pin
-//    digitalWrite(enPin_shoulder, LOW); //initially disable the motors
-//
-//    pinMode(stepPin_elbow, OUTPUT);
-//    pinMode(dirPin_elbow, OUTPUT);
-//    pinMode(enPin_elbow, OUTPUT);
-//    digitalWrite(enPin_elbow, LOW);
-//
-//    pinMode(stepPin_wrist, OUTPUT);
-//    pinMode(dirPin_wrist, OUTPUT);
-//    pinMode(enPin_wrist, OUTPUT);
-//    digitalWrite(enPin_wrist, LOW);
-//
-//    pinMode(stepPin_base, OUTPUT);
-//    pinMode(dirPin_base, OUTPUT);
-//    pinMode(enPin_base, OUTPUT);
-//    digitalWrite(enPin_base, LOW);
-//
-//    pinMode(stepPin_roll, OUTPUT);
-//    pinMode(dirPin_roll, OUTPUT);
-//    pinMode(enPin_roll, OUTPUT);
-//    digitalWrite(enPin_roll, LOW);
 
     pinMode(gripperPin, OUTPUT);
 
@@ -107,14 +85,24 @@ void setup(){
     gripper.attach(gripperPin);
 }
 
-void poll_for_new_coords(double (&move)[4]){
+void poll_for_new_coords(double (&move)[NEW_MOVE_SIZE]){
     //Poll serial connection for a new command from the CMController
     //This process has not been fully designed yet.
-    move[0] = 25;
-    move[1] = 10;
-    move[2] = 7;
-    move[3] = 180;
-    move[4] = 1;
+    size_t data_len;
+    char * buff;
+    char * tokenized_buff;
+    int coord_buff_size = (4*NEW_MOVE_SIZE)+(NEW_MOVE_SIZE-1); //NEW_MOVE_SIZE number of comma seperated values of length 4. 6 moves = 4*6 numbers + (6-1) commas = 29 
+    int i = 0;
+
+    while(!Serial.available()){}
+    //Once we receive data
+    data_len = Serial.readBytes(buff, coord_buff_size); // expects something like "1000,0200,0030,0004,0050,0000"
+    tokenized_buff = strtok(buff,",");
+    while(tokenized_buff != NULL){
+      move[i] = strtod(tokenized_buff, NULL);
+      tokenized_buff = strtok(NULL, ",");
+      i++;
+    }
 }
 
 void actuate_gripper (int decision) {
@@ -123,12 +111,12 @@ void actuate_gripper (int decision) {
 
     if (decision > 0){
         //clockwise
-      for (int pos = 0; pos <= 180; pos++){
+      for (int pos = 0; pos <= 10; pos++){
         gripper.write(pos);
         delay(15);
       }
     } else{//clockwise = false
-        for (int pos = 180; pos >= 0; pos--){
+        for (int pos = 10; pos >= 0; pos--){
         gripper.write(pos);
         delay(15);
       }
@@ -139,73 +127,41 @@ void actuate_gripper (int decision) {
 void loop() {
 
     poll_for_new_coords(new_move);
-    int w = 0;
-    while(!Serial.available()){
-      Serial.print("/rWaiting...");
-      Serial.print(w);
-      Serial.flush();
-      w++;
+    //VARIABLE MANAGEMENT*******************************
+    //variable declerations
+    long joint_steps[NUM_STEPPERS] = {0, 0, 0, 0, 0};  //Array to hold the steps for the stepper motors
+    long origin[NUM_STEPPERS] = {0, 0, 0, 0, 0};
+    int gripper_instruction;        //open or close gripper
+
+    for (int i = 0; i < NUM_STEPPERS; i++){
+      joint_steps[i] = (long)new_move[i];
     }
-    if (new_move != previous_move){
-        //VARIABLE MANAGEMENT*******************************
-        //variable declerations
-        long joint_steps[NUM_STEPPERS] = {0, 0, 0, 0, 0};  //Array to hold the steps for the stepper motors
-        double coords[4];                 //3D coordinates of end point
-        long origin[NUM_STEPPERS] = {0, 0, 0, 0, 0};
-        int gripper_instruction;        //open or close gripper
+    gripper_instruction = (int) new_move[NEW_MOVE_SIZE-1];    
+    //VARIABLE MANAGEMENT*******************************
 
-        //get new move data
-        Serial.print("\nPRE-CALC coords ********************\n");
-        gripper_instruction = (int) new_move[4];
-        for (int i = 0; i <= 4; i++)
-        {
-            coords[i] = new_move[i];
-          if(debug){
-              Serial.print("coords[");
-              Serial.print(i);
-              Serial.print("] = ");
-              Serial.print(coords[i]);
-              Serial.print("\n");
-          }
-        }
-        //VARIABLE MANAGEMENT*******************************
-        if(debug){
-          Serial.print("\nPRE-CALC STEPS ********************\n");
-          for(int i = 0; i < NUM_STEPPERS; i++)
-          {
-             Serial.print("steps[");
-             Serial.print(i);
-             Serial.print("] = ");
-             Serial.print(joint_steps[i]);
-             Serial.print("\n");
-          }
-        }
-        calculate_steps(coords, joint_steps);
-        if(debug){
-          Serial.print("\nPOST-CALC STEPS ********************\n");
-          for (int i = 0; i < NUM_STEPPERS; i++)
-          {
-             Serial.print("steps[");
-             Serial.print(i);
-             Serial.print("] = ");
-             Serial.print(joint_steps[i]);
-             Serial.print("\n");
-          }
-        }
+    //execute the requested move
+    //Run all motors to positions
+    //arm_steppers.runSpeedToPosition();
+    stepper_shoulder.moveTo(joint_steps[0]);
+    stepper_elbow.moveTo(joint_steps[1]);
+    stepper_wrist.moveTo(joint_steps[2]);
+    stepper_base.moveTo(joint_steps[3]);
+    stepper_roll.moveTo(joint_steps[4]);
 
-        //execute the requested move
-        arm_steppers.moveTo(joint_steps);
-        arm_steppers.runSpeedToPosition();
+    stepper_shoulder.run();
+    stepper_elbow.run();
+    stepper_wrist.run();
+    stepper_base.run();
+    stepper_roll.run();
 
-        delay(500);
-        actuate_gripper(gripper_instruction); //open or close the gripper as per
-        delay(500);
+    //wait for all moves to finish then actuate_gripper
+    while( !((stepper_shoulder.distanceToGo()+stepper_elbow.distanceToGo()+stepper_wrist.distanceToGo()+stepper_base.distanceToGo()+stepper_roll.distanceToGo()) == 0) ){}
+    actuate_gripper(gripper_instruction); //open or close the gripper
 
-        //Move arm back to origin so it can execute it's next move
-        arm_steppers.moveTo(origin);
-        arm_steppers.runSpeedToPosition();
-        for(int i=0; i <= 3; ++i){
-          previous_move[i] = new_move[i];
-        }
-    }
+    //Move arm back to origin so it can execute it's next move
+    // arm_steppers.moveTo(origin);
+    // arm_steppers.runSpeedToPosition();
+    for(int i=0; i < NEW_MOVE_SIZE; ++i){
+      previous_move[i] = new_move[i];
+      }
 }
