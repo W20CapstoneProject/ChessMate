@@ -91,7 +91,7 @@ void poll_for_new_coords(double (&move)[NEW_MOVE_SIZE]){
     size_t data_len;
     char * buff;
     char * tokenized_buff;
-    int coord_buff_size = (4*(NEW_MOVE_SIZE+1))+5 //NEW_MOVE_SIZE number of comma seperated values of length 4.
+    int coord_buff_size = (4*(NEW_MOVE_SIZE))+5 //NEW_MOVE_SIZE number of comma seperated values of length 4.
     int i = 0;
 
     while(!Serial.available()){}
