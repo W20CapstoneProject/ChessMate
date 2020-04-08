@@ -13,11 +13,11 @@ class GameBoard:
     def __init__(self):
         self.SQUARE_LENGTH = 60.452
         self.SQUARE_WIDTH= 60.452
-        self.BORDER_WIDTH = 20.0
-        self.BASE_LENGTH = 180.0
+        self.BORDER_WIDTH = 64.0
+        self.BASE_LENGTH = 85.0
         self.X_BIAS = 0
         self.Y_BIAS = 0
-        self.Z_BIAS = 0
+        self.Z_BIAS = 38.0
 
 
     def add_z_bias(self, increment):

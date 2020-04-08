@@ -6,6 +6,8 @@ import math
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
+import io
+import time
 
 
 class CMController:
@@ -23,10 +25,10 @@ class CMController:
     '''
     port = "/dev/tty.usbmodemFD141"
     baudrate = 9600
-    timeout = 5
-    ack_code = 'ACK'
-    success_code = 'OK!'
-    code_size = 3
+    timeout = 20
+    ack_code = 'ACK\n'
+    success_code = 'OK!\n'
+    code_size = 4
 
     def __init__(self):
         self.device = serial.Serial()
@@ -46,11 +48,13 @@ class CMController:
         self.device.baudrate = self.baudrate
         self.device.timeout = self.timeout
         self.device.port = port
-        try:
+        try: 
             self.device.open()
-            print("Connected to :: " + port + "\n")
+            time.sleep(5)
+            return True
         except:
             print("\nCould not connect to device.")
+            return False
 
 
     def is_connected(self):

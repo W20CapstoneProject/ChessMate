@@ -2,6 +2,7 @@ from CMController.MoveoArm.ik import InverseKinematics
 from CMController.MoveoArm.moveo_arm import MoveoArm
 from CMController.MoveoArm.instruction import InstructionManager
 from CMController.MoveoArm.instruction import MerlinInstruction
+from numpy import degrees, radians
 
 class MoveoInterface:
     '''
@@ -17,11 +18,11 @@ class MoveoInterface:
 
     def get_degrees_from_coordinates(self, x, y, z):
         ''' Calculates the inverse kinematics equation. '''
-        phi = self.ik.calculate_phi(x, y, z)
-        base = self.ik.calculate_base(x, y)
-        shoulder, elbow, wrist = self.ik.solve_inverse(x, y, phi)
+        phi = radians(180)
+        base = degrees(self.ik.calculate_base(x, y))
+        shoulder, elbow, wrist = self.ik.solve_inverse(z, y, phi)
         grip = 0
-        return (base, shoulder, elbow, wrist, grip)
+        return (base, degrees(shoulder), degrees(elbow), degrees(wrist), grip)
 
     def get_steps_from_degrees(self, base, shoulder, elbow, wrist, grip):
         ''' Calculate the steps required based off of the given degrees. '''

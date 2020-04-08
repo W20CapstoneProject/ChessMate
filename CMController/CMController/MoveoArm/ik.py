@@ -55,7 +55,7 @@ class InverseKinematics:
 
     def calculate_base(self, x, y):
         ''' Calculate base degrees. '''
-        return round(atan(y/x), self.precision)
+        return round(atan(x/y), self.precision)
 
     def calculate_phi(self, x, y, z):
         ''' Calculate phi for use with inverse kinematics equation. '''

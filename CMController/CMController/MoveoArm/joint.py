@@ -61,37 +61,32 @@ class Joint:
 class Base(Joint):
     ''' Base stepper of Moveo arm. '''
     def __init__(self):
-        super().__init__(max_constraint = 180, min_constraint = -180, gear_ratio = 10.0)
+        super().__init__(max_constraint = 180, min_constraint = -180, gear_ratio = 10.5)
         
 
 class Shoulder(Joint):
     ''' Shoulder stepper of Moveo arm. '''
     def __init__(self):
-        super().__init__(max_constraint = 45, min_constraint = -45, gear_ratio = 5.4)
+        super().__init__(max_constraint = 120, min_constraint = -120, gear_ratio = 5.4)
    
 
 class Elbow(Joint):
-<<<<<<< HEAD
     ''' Elbow stepper of Moveo arm. '''
     def __init__(self):
-        super().__init__(max_constraint = 35, min_constraint = -35, gear_ratio = 20)
-=======
-# Elbow joint of Moveo arm.
-    def __init__(self, constraint = 200, position = 0, gear_ratio = 21.7):
-        super().__init__(constraint, position, gear_ratio)
->>>>>>> master
+        super().__init__(max_constraint = 135, min_constraint = -135, gear_ratio = 21.7)
+
    
 
 class Roll(Joint):
     ''' Roll stepper of Moveo arm. '''
     def __init__(self):
-        super().__init__(max_constraint = 35, min_constraint = -35, gear_ratio = 10.0)
+        super().__init__(max_constraint = 120, min_constraint = -120, gear_ratio = 1.0)
 
 
 class Wrist(Joint):
     ''' Wrist stepper of Moveo arm. '''
     def __init__(self):
-        super().__init__(max_constraint = 35, min_constraint = -35, gear_ratio = 10.0)
+        super().__init__(max_constraint = 120, min_constraint = -120, gear_ratio = -4.7)
         
 
 class Grip(Joint):

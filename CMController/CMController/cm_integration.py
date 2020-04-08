@@ -32,10 +32,6 @@ class CMIntegration:
         self.cmc.connect()
         return self.cmc.is_connected()
 
-    def test(self):
-        ''' Exectue a dummy command. '''
-        self.cmc.send_command("0000,0000,0000,0000,0000") # Demo doesn't work without a failed serial command to start.
-
     
     def execute_move(self, move):
         '''
@@ -61,13 +57,16 @@ class CMIntegration:
                 for cmd in cmds:
                     serialized = self.moveo_interface.serialize_command(cmd)
                     print("\nSerialized instructions: " + str(serialized))
-                    response = self.cmc.send_command(serialized)
+                    #response = self.cmc.send_command(serialized)
+                    '''
                     print(response)
                     if (response == self.success_code):
                         self.cmd_history.append(cmd)
+                        print(' ')
                     else: 
+                       
                         raise Exception ("Communication Error", "Merlin failed to execute command")  
-
+                    '''
                 print('Done.')
                 return True
             else:
@@ -81,7 +80,7 @@ class CMIntegration:
 
 
     def end(self):
-        pass
+        print('Completed')
 
 
 class CommandHandler:
@@ -96,10 +95,10 @@ class CommandHandler:
     def create(self, piece, square_index):
         '''
         Used to create the individual commands for the Merlin system.
-
-        1. Get cartesian coordinates of square number (index) from the platform (chess board).
-        2. Use inverse kinematics to determine the required joint rotations.
-        3. Convert joint rotations angles to steps.
+        Calculating steps requires:
+            1. Get cartesian coordinates of square number (index) from the platform (chess board).
+            2. Use inverse kinematics to determine the required joint rotations.
+            3. Convert joint rotations angles to steps.
         '''
         coord = self.platform.get_coordinates(square_index, piece)
         base, shoulder, elbow, wrist, grip = self.moveo_interface.get_degrees_from_coordinates(coord[0], coord[1], coord[2])

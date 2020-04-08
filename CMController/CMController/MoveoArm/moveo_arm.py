@@ -1,4 +1,5 @@
 from CMController.MoveoArm.joint import Base, Shoulder, Elbow, Wrist, Grip
+from numpy import radians, degrees
 
 # Approximate arm dimensions:
 #     - Shoulder Bone length = 220mm
@@ -57,13 +58,14 @@ class MoveoArm:
         Given the desired degrees for rotation, calculate the steps for each motor.
         This function assumes that the current position of the joints are all at zero/origin.
 
-        Returns - steps for each controlled joint
+        Returns: steps for each controlled joint
+        Example Output: -013,-012,0056,0012,0000
         '''
-        base_steps = round(self.base.calculate_steps(base_d), self.precision)
-        shoulder_steps = round(self.shoulder.calculate_steps(shoulder_d), self.precision)
-        elbow_steps = round(self.elbow.calculate_steps(elbow_d), self.precision)
-        wrist_steps = round(self.wrist.calculate_steps(wrist_d), self.precision)
-        grip_steps = round(self.grip.calculate_steps(grip_d), self.precision)
+        base_steps = round(self.base.calculate_steps(base_d))
+        shoulder_steps = round(self.shoulder.calculate_steps(shoulder_d))
+        elbow_steps = round(self.elbow.calculate_steps(elbow_d))
+        wrist_steps = round(self.wrist.calculate_steps(wrist_d))
+        grip_steps = round(self.grip.calculate_steps(grip_d))
         return (base_steps, shoulder_steps, elbow_steps, wrist_steps, grip_steps)
 
 
