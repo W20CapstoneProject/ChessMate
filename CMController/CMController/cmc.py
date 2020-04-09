@@ -18,9 +18,6 @@ class CMController:
     Commands are 3 digit step commands for the following sequence of motors
     base shoulder elbow wrist grip
 
-    Todo:
-    - Verify send_command() is compatible with Merlin protocols.
-
     March 2, 2020: The main move execution command still needs to be completed. Also requires better unit testing to ensure the correct coordinate mapping and move consumption. Will be updating this code for the IO demonstration to work with the Merlin control program.
     '''
     port = "/dev/tty.usbmodemFD141"
@@ -82,7 +79,7 @@ class CMController:
         return complete
 
 
-    def list_serial_devices():
+    def list_serial_devices(self):
         '''
         Lists all devices connected via USB.
 

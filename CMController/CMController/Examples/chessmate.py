@@ -1,4 +1,4 @@
-from CMController.cm_integration import CMIntegration
+from CMController.Integrations.cm_integration import CMIntegration
 from CMController.MoveoArm.instruction import MerlinInstruction
 from CMController.cmc import CMController
 from CMController.MoveoArm.ik import InverseKinematics, IKMapping
@@ -6,7 +6,6 @@ from CMController.MoveoArm.moveo_arm import MoveoArm
 from CMController.MoveoArm.interface import MoveoInterface
 from numpy import radians, degrees
 import time
-
 
 
 def chessmate_integration_example():
@@ -30,12 +29,6 @@ def chessmate_integration_example():
 
     cmi.end()
 
-       
-def visualizer_demo():  
-    ik = InverseKinematics() 
-    arm = MoveoArm()
-    mapper = IKMapping()
-    mapper.show_arm(radians(35), radians(3102), radians(-238))
 
 def video_calculations():
     cmi = CMIntegration()
@@ -53,22 +46,20 @@ def video_calculations():
     move1 = move_manager.get_move(pawn, 12, 28)
     response = cmi.execute_move(move1)
     print(str(response) + "\n")
-  # Knight Move -> 2 to 19
+    # Knight Move -> 2 to 19
     print("Moving knight from " + str(2) + " to " + str(19))
     move2 = move_manager.get_move(knight, 2, 19)
     response = cmi.execute_move(move2)
 
+
 def video_demo():
     #Video Demonstration of ChessMate arm
     i_setup = "0,0,0,0,180"
-    # Pawn moves
     i1 = "-84.0,35.0,2250.0,-422.0,0"
     i2 = "-56.0,239.0,1114.0,-490.0,180"
-   # Knight moves
     i3 = "-468.0,-63.0,2521.0,-449.0,0"
     i4 = "-196.0,128.0,1680.0,-465.0,0"
 
-    # Transmit instructions to Merlin
     cmc = CMController()
     cmc.connect()
     if(cmc.is_connected()):
@@ -79,16 +70,11 @@ def video_demo():
         cmc.send_command(i2)
         cmc.send_command(i_setup)
         time.sleep(5)
-        #cmc.send_command(i3)
-        #cmc.send_command("-468, 0, 1800.0, -570, 0")
-        #cmc.send_command(i4)
-        #cmc.send_command(i_setup)
+
 
  
 
 if __name__ == "__main__":
     #chessmate_integration_example()
-    #visualizer_demo()
-    #queens_gambit()
     #video_calculations()
     video_demo()

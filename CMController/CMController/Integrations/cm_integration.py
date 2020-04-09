@@ -57,8 +57,7 @@ class CMIntegration:
                 for cmd in cmds:
                     serialized = self.moveo_interface.serialize_command(cmd)
                     print("\nSerialized instructions: " + str(serialized))
-                    #response = self.cmc.send_command(serialized)
-                    '''
+                    response = self.cmc.send_command(serialized)
                     print(response)
                     if (response == self.success_code):
                         self.cmd_history.append(cmd)
@@ -66,7 +65,6 @@ class CMIntegration:
                     else: 
                        
                         raise Exception ("Communication Error", "Merlin failed to execute command")  
-                    '''
                 print('Done.')
                 return True
             else:
