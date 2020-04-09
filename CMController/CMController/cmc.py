@@ -6,6 +6,8 @@ import math
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
+import io
+import time
 
 
 class CMController:
@@ -16,17 +18,14 @@ class CMController:
     Commands are 3 digit step commands for the following sequence of motors
     base shoulder elbow wrist grip
 
-    Todo:
-    - Verify send_command() is compatible with Merlin protocols.
-
     March 2, 2020: The main move execution command still needs to be completed. Also requires better unit testing to ensure the correct coordinate mapping and move consumption. Will be updating this code for the IO demonstration to work with the Merlin control program.
     '''
     port = "/dev/tty.usbmodemFD141"
     baudrate = 9600
-    timeout = 5
-    ack_code = 'ACK'
-    success_code = 'OK!'
-    code_size = 3
+    timeout = 20
+    ack_code = 'ACK\n'
+    success_code = 'OK!\n'
+    code_size = 4
 
     def __init__(self):
         self.device = serial.Serial()
@@ -46,11 +45,13 @@ class CMController:
         self.device.baudrate = self.baudrate
         self.device.timeout = self.timeout
         self.device.port = port
-        try:
+        try: 
             self.device.open()
-            print("Connected to :: " + port + "\n")
+            time.sleep(5)
+            return True
         except:
             print("\nCould not connect to device.")
+            return False
 
 
     def is_connected(self):
@@ -78,7 +79,7 @@ class CMController:
         return complete
 
 
-    def list_serial_devices():
+    def list_serial_devices(self):
         '''
         Lists all devices connected via USB.
 

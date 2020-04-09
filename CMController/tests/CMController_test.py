@@ -7,7 +7,7 @@ March 2, 2020: Need to write accurate unit test cases for the CMController class
 import sys
 import unittest
 from CMController.cmc import CMController
-from CMController.cm_integration import CMIntegration
+from CMController.Integrations.cm_integration import CMIntegration
 from CMController.CMGame.board import GameBoard, BoardMapping
 from CMController.MoveoArm.instruction import InstructionManager, MoveInstruction, BaseInstruction
 from CMController.MoveoArm.ik import InverseKinematics
