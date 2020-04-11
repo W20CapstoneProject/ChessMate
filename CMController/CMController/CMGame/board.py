@@ -31,11 +31,7 @@ class GameBoard:
 
 
     def get_coordinate_x(self, index):
-        '''
-        Call to calculate the x coordinate of the chess board square.
-
-        March 2, 2020: Not verfied yet. Need to test with Merlin program. Need to get accurate board dimensions.
-        '''
+        ''' Call to calculate the x coordinate of the chess board square. '''
         column = index % 8
         if column == 0:
             column=8
@@ -49,22 +45,14 @@ class GameBoard:
 
 
     def get_coordinate_y(self, index):
-        '''
-        Call to calculate the y coordinate of the chess board square.
-
-        March 2, 2020: Not verfied yet. Need to test with Merlin program. Need to get accurate board dimensions.
-        '''
+        ''' Call to calculate the y coordinate of the chess board square. '''
         row = math.floor((index-1)/8)
         y = self.BASE_LENGTH + self.BORDER_WIDTH + self.SQUARE_LENGTH/2 + row * self.SQUARE_LENGTH
         return y + self.Y_BIAS
 
 
     def get_coordinate_z(self, piece_height):
-        '''
-        Call to calculate the z coordinate of the chess board square.
-
-        March 2, 2020: Not verfied yet. Need to test with Merlin program. Need to get accurate board dimensions.
-        '''
+        ''' Call to calculate the z coordinate of the chess board square.'''
         z = piece_height
         return z + self.Z_BIAS
 
