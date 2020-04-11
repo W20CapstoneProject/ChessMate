@@ -2,7 +2,7 @@
 Python 3.6.5 (https://www.python.org/downloads/release/python-365/)
 
 CMController was created for use with our own custom Merlin (Not Marlin) firmware for control of the 3D BCN Moveo Arm. 
-It enables serial communication with Merlin to send instructions based on cartesian coordinates or simple steps assigned to each stepper. 
+It enables serial communication with Merlin to send instructions based on cartesian coordinates converted to step assignments.
 
 The CMController can be used by the ChessMate program for it's integration with Merlin. ChessMate has access to the following three commands:
 1. start() - Used to connect Merlin via serial commuication.
@@ -13,7 +13,7 @@ This combination of commands allows ChessMate to play a game of chess with the 3
 
 ### Getting Started:
 1. Clone our repo
-2. Go to ChessMa†e/CMController. This directory contains the setup.py file for package initalization.
+2. Go to the CMController. This directory contains the setup.py file for package initalization.
 3. Enter the following command to install the CMController package. Note: this will install the package in "editable" mode.
 See more at (https://docs.pytest.org/en/latest/goodpractices.html) for why this method was chosen.
 ```
