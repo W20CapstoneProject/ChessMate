@@ -12,7 +12,7 @@ Motor control firmware for the 3D BCN Moveo Arm. Utilizes an Arduino Mega 2560.
 CMController was created for use with our own custom Merlin firmware for control of the 3D BCN Moveo Arm.
 It enables serial communication with Merlin to send instructions based on cartesian coordinates. The CMController is also used by the ChessMate program for it's integration with Merlin. Contains a combination of commands to enable ChessMate to play a game of chess with the 3D Moveo Arm.
 
-### gameBoard
+### GameBoard
 Arduino code for running the RFID chess board. Polls and collects RFID information from the game board to determine the current status of the game. 
 
 ![](https://github.com/W20CapstoneProject/ChessMate/blob/master/Capstone_Posterps_flat.png)
