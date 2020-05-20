@@ -15,4 +15,5 @@ It enables serial communication with Merlin to send instructions based on cartes
 ### gameBoard
 Arduino code for running the RFID chess board. Polls and collects RFID information from the game board to determine the current status of the game. 
 
+![](https://github.com/W20CapstoneProject/ChessMate/blob/master/Capstone_Posterps_flat.png)
 
