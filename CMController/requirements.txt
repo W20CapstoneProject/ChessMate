@@ -38,7 +38,7 @@ prometheus-client==0.7.1
 prompt-toolkit==1.0.14
 ptyprocess==0.6.0
 py==1.8.1
-Pygments==2.5.2
+Pygments==2.7.4
 PyGraph==0.2.1
 PyInquirer==1.0.3
 pyobjc==6.1
